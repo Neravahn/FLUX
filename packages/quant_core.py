@@ -1,9 +1,18 @@
 import pandas as pd
 import yfinance as yf
 import numpy as np
+from RestrictedPython import compile_restricted, safe_globals
 
 
-def run_formula(ticker, start_date, end_date, formula):
+
+
+
+
+
+
+def run_formula(ticker, start_date, end_date, formula, func_name , func_body):
+
+    
 
     """
     I  am making this module so that user can create their own custom moving averages without coding.
@@ -20,6 +29,7 @@ def run_formula(ticker, start_date, end_date, formula):
     if isinstance(data.columns, pd.MultiIndex):
         data.columns = data.columns.get_level_values(0)
     data.columns = [col.lower() for col in data.columns]
+    
 
 
 
@@ -126,9 +136,10 @@ def run_formula(ticker, start_date, end_date, formula):
     # DEFINING ROLLING VOLATILITY
     def rolling_volatility(x , rw):
         return x.pct_change().rolling(int(rw)).std() * np.sqrt(rw)
+    
 
 
-
+    
 
     
     # ADDING IN ENVIORMENT
@@ -149,13 +160,34 @@ def run_formula(ticker, start_date, end_date, formula):
             }
     
 
+    # USER DEFINED PARAMETERS
+    if func_name and func_body:
+        local_env = {}
+        try:
+            byte_code = compile_restricted(func_body, '<user_function>', 'exec')
+            exec(byte_code, env , local_env)
+            user_function = local_env.get(func_name)
+            if callable(user_function):
+                env[func_name] = user_function
 
+            else:
+                raise ValueError("The provided function name is not callable")
+            
+        except Exception as e:
+            return {"error" : f"Error in user defined function: {e}"}
+        
 
-    # FORMULA PARSING 
-    formula = formula.strip()
-    data['custom'] = eval(formula,  {"__builtins__": {}}, env)
+    # CALCULATING THE FORMULA
+    try:
+        byte_code = compile_restricted(formula, '<string>', 'eval')
+        result = eval(byte_code, env)
+        data['custom'] = result
 
+    except Exception as e:
+            return {"error" : f"Error in user defined function: {e}"}
+    
 
+    # PREPARING THE OUTPUT
     days = list(range(1, len(data) + 1))
 
     return   {
