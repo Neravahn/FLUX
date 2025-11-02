@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOLATILIY - result</title>
+</head>
+<style>
+    @font-face {
+            font-family: 'play-regular';
+            src: url("{{ url_for('static', filename='fonts/Play-Regular.ttf') }}") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+    body {
+    background-color: #0d0d0d;
+    color: #eaeaea;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    color: #ffffff;
+    font-family: play-regular;
+    font-size: 2em;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+p {
+    background-color: #1a1a1a;
+    color: #dad8d8;
+    width: 350px;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border-radius: 12px;
+    font-size: 1.1em;
+}
+
+
+p:hover {
+    background-color: #262626;
+    transition: 0.3s ease;
+}
+
+</style>
+<body>
+    <h2>Alpha Beta Analysis - {{ticker}} and {{benchmark}}</h2>
+    <p><strong>BETA: </strong>{{beta}}</p>
+    <p><strong>ALPHA: </strong>{{alpha}}</p>
+    <p><strong>PERFORMANCE: </strong>{{performance}}</p>
+    <p><strong>INTERPRETATION: </strong>{{interpretation}}</p>
+
+    <img src="data:image/png;base64,{{ plot_image }}" alt="CHART " width="500">
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUX ENGINE - Documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
+    <style>
+       @font-face {
+            font-family: 'comforta-regular';
+            src: url("{{ url_for('static', filename='fonts/Comfortaa-VariableFont_wght.ttf') }}") format("truetype");
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Comfortaa', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 75%;
+            max-width: 1000px;
+        }
+
+        h1 {
+            color: #d50cff;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #d50cff;
+            margin-top: 30px;
+        }
+
+        pre {
+            background: #d50cff;
+            color: #fff;
+            padding: 4px 6px;
+            border-radius: 6px;
+            width: fit-content;
+            font-size: 1rem;
+        }
+
+        code {
+            font-family: 'Consolas', monospace;
+        }
+
+        p {
+            font-size: 1rem;
+        }
+
+        ol {
+            margin-left: 25px;
+            line-height: 1.8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: #111;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            border: 1px solid #333;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #d50cff;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        td code {
+            background: #222;
+            color: #d5b3ff;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #0b0b0b;
+        }
+
+        hl {
+            color: #d50cff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>FLUX ENGINE - Documentation</h1>
+
+        <div>
+            <h2>Overview</h2>
+            <p>
+                <strong>FLUX ENGINE</strong> is a modular financial analysis tool that allows users to build and
+                visualize
+                their <strong>own trading formulas</strong> without writing any code.
+                It uses <strong>NumPy</strong> and <strong>Pandas</strong> for computation, <strong>yFinance</strong>
+                for live
+                market data, and <strong>Chart.js</strong> for interactive visualizations.
+            </p>
+
+            <p>Example usage:</p>
+            <pre><code>rolling_mean(close, 5)</code></pre>
+            <p>The engine parses and executes them safely, returning a chart instantly.</p>
+
+            <h2>Features</h2>
+            <li>Custom one-line formulas (no coding required)</li>
+            <li>Built-in financial variables and NumPy functions</li>
+            <li>Rolling window operations (e.g., rolling_mean, rolling_std, rolling_sum)</li>
+            <li>Interactive charts with zoom, pan, and fullscreen</li>
+            <li>Works directly on live market data via Yahoo Finance</li>
+            <li>Download chart as image</li>
+
+            <h2>Formula Syntax</h2>
+            <p>Formulas are entered as simple one-liners using predefined variables and functions.</p>
+            <p>Some examples:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Formula</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Simple</td>
+                        <td><code>sqrt(close)</code></td>
+                        <td>Square root of closing price</td>
+                    </tr>
+                    <tr>
+                        <td>Rolling</td>
+                        <td><code>rolling_mean(close, 10)</code></td>
+                        <td>10-day simple moving average</td>
+                    </tr>
+                    <tr>
+                        <td>Combined</td>
+                        <td><code>rolling_mean(close, 10) - rolling_mean(close, 50)</code></td>
+                        <td>Moving average crossover</td>
+                    </tr>
+                    <tr>
+                        <td>Volume-based</td>
+                        <td><code>log(volume)</code></td>
+                        <td>Logarithmic volume scaling</td>
+                    </tr>
+                    <tr>
+                        <td>Custom</td>
+                        <td><code>(high + low + close) / 3</code></td>
+                        <td>Typical price calculation</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Core Concept</h2>
+            <li><strong><hl>User Input Formula -</hl></strong> The user enters a single-line mathematical formula.</li>
+            <li><strong><hl>Safe Formula Parser -</hl></strong> The formula runs in a
+                <hl>restricted Python environment</hl> exposing only approved variables and functions.</li>
+            <li><strong><hl>Live Visuals -</hl></strong> The output is plotted directly using
+                <hl>Chart.js</hl> with zoom, pan, and download capabilities.</li>
+
+            <h2>Built-in Variables</h2>
+            <li><hl>close</hl> → Closing price</li>
+            <li><hl>open</hl> → Opening price</li>
+            <li><hl>high</hl> → Highest price</li>
+            <li><hl>low</hl> → Lowest price</li>
+            <li><hl>volume</hl> → Trading volume</li>
+            <li><hl>price</hl> → Alias for Closing price</li>
+
+            <h2>Supported Functions</h2>
+            <p>The following functions are allowed inside user formulas:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Functions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Basic Math</td>
+                        <td><code>abs, sqrt, power, exp, log, log10, sign, round, floor, ceil, clip, mod</code></td>
+                    </tr>
+                    <tr>
+                        <td>Statistical</td>
+                        <td><code>mean, median, std, var, min, max, sum, prod, percentile, quantile, nanmean, nanstd</code></td>
+                    </tr>
+                    <tr>
+                        <td>Conditional</td>
+                        <td><code>where, maximum, minimum, isfinite, isnan, all, any</code></td>
+                    </tr>
+                    <tr>
+                        <td>Trigonometric</td>
+                        <td><code>sin, cos, tan, arcsin, arccos, arctan, degrees, radians, sinh, cosh, tanh</code></td>
+                    </tr>
+                    <tr>
+                        <td>Series Operations</td>
+                        <td><code>diff(x, n=1), cumsum(x), cumprod(x)</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>All functions operate on <hl>Pandas Series</hl> or <hl>NumPy arrays</hl> for vectorized performance.</p>
+
+            <p>
+                <h2>Rolling Window Operations</h2>
+                <li><hl>rolling_mean(x , n)</hl>-> Rolling mean with window n</li>
+                <li><hl>rolling_std(x , n)</hl>-> Rolling standard deviation with window n</li>
+                <li><hl>rolling_sum(x , n)</hl>-> Rolling sum</li>
+            </p>
+            <p>Example</p>
+            <pre><code>rolling_mean(high - low , 5)</code></pre>
+            This calculates the 10-day rolling standard deviation of the daily range
+
+            <p>
+                <h2>Custom Function (upcoming)</h2>
+                <li><hl>ema(x, span)</hl>-> Exponential moving average</li>
+                <li><hl>rsi(x, span)</hl>-> Relative Strength Index</li>
+                <li><hl>zscore(x, span)</hl>-> Rolling z-scores</li>
+                <p>Users will also br able to define their own funtions directly from the UI (if the 'upcoming' in the heading
+                isn't removed its under development)</p>
+
+            </p>
+            
+            <p>
+                <h2>Error Hangling</h2>
+                <p>Flux engine validates every formula before execution</p>
+                <li>Invalid formulas show an error message (e.g., syntax issue or missing parameters)</li>
+                <li>All unsafe Python built-ins are disabled</li>
+                <li>Missing data points (NaN) are automatically handled</li>
+            </p>
+
+            <p>
+                <h2>Future Improvements</h2>
+                <li>Add custom function regitration from the UI (eg., defining EMA or RSI on-the-fly)</li>
+                <li>Implement a formula validator before evaluation to highlight errors instantly</li>
+                <li>Enable multi-formula  comparison charts for the strategy backtesting</li>
+                <li>Introduce performance coaching for faster re[eated computations</li>
+            </p>
+
+        </div>
+    </div>
+</body>
+
+</html>

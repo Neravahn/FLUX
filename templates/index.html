@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUX - INDEX</title>
+
+    <style>
+        @font-face {
+            font-family: 'parkinsans-variable';
+            src: url("{{ url_for('static', filename='fonts/Parkinsans-VariableFont_wght.ttf') }}") format("truetype");
+        }
+
+        @font-face {
+            font-family: 'comforta-regular';
+            src: url("{{ url_for('static', filename='fonts/Comfortaa-VariableFont_wght.ttf') }}") format("truetype");
+        }
+
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'comforta-regular';
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding-top: 60px;
+            position: relative;
+        }
+        .portfolio-btn {
+            position: fixed;
+            top: 20px;
+            right: 25px;
+            background-color: #d502ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .portfolio-btn:hover {
+            background-color: white;
+            color: black;
+            transform: scale(1.05);
+        }
+
+        .title-container {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        h4 {
+            margin: 0;
+            color: #ccc;
+            font-weight: normal;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-family: 'parkinsans-variable';
+            font-size: 6rem;
+            margin: 10px 0 5px;
+            letter-spacing: 3px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #bbb;
+            margin-bottom: 25px;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 35px;
+            width: 85%;
+            max-width: 950px;
+            justify-items: center;
+        }
+
+        .card {
+            background-color: rgba(23, 23, 23, 0.9);
+            padding: 25px;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 230px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-6px) scale(1.05);
+            background-color: #ffffff;
+            color: black;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: #aaa;
+            line-height: 1.4rem;
+        }
+
+        .card:hover p {
+            color: #222;
+        }
+
+        .flux-card {
+            background-color: #d502ff;
+            color: white;
+        }
+
+        .flux-card:hover {
+            background-color: #ffffff;
+            color: black;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+
+        .flux-card:hover p {
+            color: #222;
+        }
+
+        @media (max-width: 1024px) {
+            h1 {
+                font-size: 5rem;
+            }
+
+            .card-container {
+                gap: 30px;
+            }
+
+            .portfolio-btn {
+                padding: 8px 14px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 700px) {
+            h1 {
+                font-size: 4rem;
+            }
+
+            .card-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+
+            .portfolio-btn {
+                top: 15px;
+                right: 15px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+
+            .card-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="https://neravahn.pythonanywhere.com" target="_blank" class="portfolio-btn">Portfolio</a>
+
+    <div class="title-container">
+        <h4>WELCOME TO -</h4>
+        <h1>FLUX</h1>
+        <p>Decode the Flow of Market</p>
+    </div>
+
+    <div class="card-container">
+        <div class="card" onclick="window.location.href='{{ url_for('main') }}'">
+            <h3>Analysis</h3>
+            <p>Perform volatility and return-based stock analysis.</p>
+        </div>
+
+        <div class="card flux-card" onclick="window.location.href='{{ url_for('flux_engine')}}'">
+            <h3>Flux Engine</h3>
+            <p>Create your own indicators with custom math expressions.</p>
+        </div>
+
+        <div class="card" onclick="window.location.href='{{ url_for('correlation') }}'">
+            <h3>Correlation</h3>
+            <p>Understand relationships between different stocks.</p>
+        </div>
+
+        <div class="card" onclick="window.location.href='{{ url_for('moving_average') }}'">
+            <h3>Moving Averages</h3>
+            <p>Visualize short-term and long-term market trends.</p>
+        </div>
+
+        <div class="card" onclick="window.location.href='{{ url_for('beta_alpha')}}'">
+            <h3>Beta + Alpha</h3>
+            <p>Measure a stock's performance and sensitivity to market movements.</p>
+        </div>
+
+        <div class="card" onclick="window.location.href='{{ url_for('risk_return_summary')}}'">
+            <h3>Risk Return Summary</h3>
+            <p>Evaluate how efficiently each stock converts risk into returns.</p>
+        </div>
+    </div>
+</body>
+
+</html>
