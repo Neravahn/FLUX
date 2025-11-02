@@ -1,18 +1,9 @@
 import pandas as pd
 import yfinance as yf
 import numpy as np
-from RestrictedPython import compile_restricted, safe_globals
 
 
-
-
-
-
-
-
-def run_formula(ticker, start_date, end_date, formula, func_name , func_body):
-
-    
+def run_formula(ticker, interval, formula_1, formula_2):
 
     """
     I  am making this module so that user can create their own custom moving averages without coding.
@@ -25,11 +16,21 @@ def run_formula(ticker, start_date, end_date, formula, func_name , func_body):
     """
 
     # FETCH DATA
-    data = yf.download(ticker, start = start_date, end = end_date)
+    if interval in ['1m', '2m', '5m', '15', '30m']:
+
+        period = '7d' 
+    
+    elif interval in['60m', '90m']:
+        period = '60d'
+
+    elif interval in ['1d', '1wk', '1mo', '3mo']:
+        period = 'max'
+
+    
+    data = yf.download(ticker, period = period, interval=interval)
     if isinstance(data.columns, pd.MultiIndex):
         data.columns = data.columns.get_level_values(0)
     data.columns = [col.lower() for col in data.columns]
-    
 
 
 
@@ -45,7 +46,7 @@ def run_formula(ticker, start_date, end_date, formula, func_name , func_body):
 
     }
 
-    
+
 
     allowed_fun = {
 
@@ -71,14 +72,14 @@ def run_formula(ticker, start_date, end_date, formula, func_name , func_body):
     # DEFINING ROLLING WINDOW AND OTHER FUNCTIONS CUZ LAMBA FUNCTION WAS NOT WORKING FINE
     def rolling_mean(x , rw):
         return x.rolling(int(rw)).mean()
-    
+
     def rolling_std(x, rw):
         return x.rolling(int(rw)).std()
-    
+
     def rolling_sum(x, rw):
         return x.rolling(int(rw)).sum()
-    
-    
+
+
 
     # DEFINING RSI
     def rsi(x, rw):
@@ -89,36 +90,38 @@ def run_formula(ticker, start_date, end_date, formula, func_name , func_body):
         avg_loss = loss.rolling(int(rw)).mean()
         rs= avg_gain/avg_loss
         return 100 - ( 100 / ( 1 + rs))
-    
+
     # DEFINING ZSCORE
     def zscore(x , rw):
         a = x.rolling(int(rw)).mean()
         b = x.rolling(int(rw)).std()
         return (x - a) / b
-    
+
     # DEFINING SIMPLE MOVING AVERAGE
     def sma(x, rw):
         return x.rolling(int(rw)).mean()
-    
+
 
     # DEFINING EXPONENTIAL MOVING AVERAGE
     def ema(x, rw):
         return x.ewm(int(rw) , adjust=False).mean()
-    
+
 
     # DEFINING WEIGHTED MOVING AVERAGE
     def wma(x, rw):
         weights = np.arange(1, int(rw) + 1)
         return x.rolling(int(rw)).apply(lambda prices: np.dot(prices,weights)/weights.sum(), raw=True)
-    
+
 
     # DEFINING VWAP
     def vwap(price, volume):
         return (price*volume).cumsum()/volume.cumsum()
-    
-    
+
+
 
     # DEFINING MOMENTUM
+    def momentum(x, rw):
+        return x - x.shift(int(rw))
     def momentum(x, period):
         return x - x.shift(int(period))
     
@@ -136,12 +139,12 @@ def run_formula(ticker, start_date, end_date, formula, func_name , func_body):
     # DEFINING ROLLING VOLATILITY
     def rolling_volatility(x , rw):
         return x.pct_change().rolling(int(rw)).std() * np.sqrt(rw)
-    
 
 
-    
+        
 
-    
+
+
     # ADDING IN ENVIORMENT
     env =  {**allowed_var, **allowed_fun, 
             'rolling_mean' : rolling_mean, 
@@ -158,43 +161,27 @@ def run_formula(ticker, start_date, end_date, formula, func_name , func_body):
             "cumulative_return":cumulative_return,
             "rolling_volatility": rolling_volatility
             }
-    
 
-    # USER DEFINED PARAMETERS
-    if func_name and func_body:
-        local_env = {}
-        try:
-            byte_code = compile_restricted(func_body, '<user_function>', 'exec')
-            exec(byte_code, env , local_env)
-            user_function = local_env.get(func_name)
-            if callable(user_function):
-                env[func_name] = user_function
 
-            else:
-                raise ValueError("The provided function name is not callable")
-            
-        except Exception as e:
-            return {"error" : f"Error in user defined function: {e}"}
-        
 
-    # CALCULATING THE FORMULA
-    try:
-        byte_code = compile_restricted(formula, '<string>', 'eval')
-        result = eval(byte_code, env)
-        data['custom'] = result
 
-    except Exception as e:
-            return {"error" : f"Error in user defined function: {e}"}
-    
+    # FORMULA PARSING 
+    formula_1 = formula_1.strip()
+    data['custom_1'] = eval(formula_1,  {"__builtins__": {}}, env) if formula_1 else data['close']
 
-    # PREPARING THE OUTPUT
-    days = list(range(1, len(data) + 1))
+    formula_2 = formula_2.strip()
+    data['custom_2'] = eval(formula_2,  {"__builtins__": {}}, env) if formula_2 else data['close']
+
+
+    days = data.index.strftime("%Y-%m-%d %H:%M:%S").tolist()
+
 
     return   {
         'days': days,
-        'values': data['custom'].astype(float).replace({np.nan: None}).tolist(),
+        'values_1': data['custom_1'].astype(float).replace({np.nan: None}).tolist(),
+        'values_2': data['custom_2'].astype(float).replace({np.nan: None}).tolist(),
+        'high' : data['high'].astype(float).replace({np.nan:None}).tolist(),
+        'low' : data['low'].astype(float).replace({np.nan:None}).tolist(),
+        'open' : data['open'].astype(float).replace({np.nan:None}).tolist(),
         'close' : data['close'].astype(float).replace({np.nan: None}).tolist()
     }
-
-    
-
