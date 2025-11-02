@@ -58,7 +58,7 @@ def run_formula(ticker, start_date, end_date, formula):
 
     }
 
-    # DEFINING ROLLING WINDOW CUZ LAMBA FUNCTION WAS NOT WORKING FINE
+    # DEFINING ROLLING WINDOW AND OTHER FUNCTIONS CUZ LAMBA FUNCTION WAS NOT WORKING FINE
     def rolling_mean(x , rw):
         return x.rolling(int(rw)).mean()
     
@@ -67,19 +67,70 @@ def run_formula(ticker, start_date, end_date, formula):
     
     def rolling_sum(x, rw):
         return x.rolling(int(rw)).sum()
+    
+    
 
-    allowed_rolling = {
-        'rolling_mean' : rolling_mean,
-        'rolling_std' : rolling_std,
-        'rolling_sum' : rolling_sum
+    # DEFINING RSI
+    def rsi(x, rw):
+        delta = x.diff()
+        gain = delta.where(delta > 0,0)
+        loss = -delta.where(delta<0, 0)
+        avg_gain = gain.rolling(int(rw)).mean()
+        avg_loss = loss.rolling(int(rw)).mean()
+        rs= avg_gain/avg_loss
+        return 100 - ( 100 / ( 1 + rs))
+    
+    # DEFINING ZSCORE
+    def zscore(x , rw):
+        a = x.rolling(int(rw)).mean()
+        b = x.rolling(int(rw)).std()
+        return (x - a) / b
+    
+    # DEFINING SIMPLE MOVING AVERAGE
+    def sma(x, rw):
+        return x.rolling(int(rw)).mean()
+    
 
-    }
+    # DEFINING EXPONENTIAL MOVING AVERAGE
+    def ema(x, rw):
+        return x.ewm(int(rw) , adjust=False).mean()
+    
 
+    # DEFINING WEIGHTED MOVING AVERAGE
+    def wma(x, rw):
+        weights = np.arange(1, int(rw) + 1)
+        return x.rolling(int(rw)).apply(lambda prices: np.dot(prices,weights)/weights.sum(), raw=True)
+    
+
+    # DEFINING VWAP
+    def vwap(price, volume):
+        return (price*volume).cumsum()/volume.cumsum()
+    
+    
+
+    # DEFINING MOMENTUM
+    def momentum(x, rw):
+        return x - x.shift(int(rw))
+
+
+
+
+
+        
+
+
+    
+    # ADDING IN ENVIORMENT
     env =  {**allowed_var, **allowed_fun, 
             'rolling_mean' : rolling_mean, 
             'rolling_std' : rolling_std, 
             'rolling_sum' : rolling_sum,
+            'ema' :ema,
+            'rsi' : rsi,
+            'zscore' : zscore
             }
+    
+
 
 
     # FORMULA PARSING 
