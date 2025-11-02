@@ -109,14 +109,25 @@ def run_formula(ticker, start_date, end_date, formula):
     
 
     # DEFINING MOMENTUM
-    def momentum(x, rw):
-        return x - x.shift(int(rw))
+    def momentum(x, period):
+        return x - x.shift(int(period))
+    
+
+    # DEFINING ROC
+    def roc(series, period):
+        return (series /series.shift(period) - 1) * 100
+    
+
+    # DEFINING CUMULATIVE RETURN
+    def cumulative_return(series):
+        return ( 1 + series.pct_change()).cumprod() - 1
+    
+
+    # DEFINING ROLLING VOLATILITY
+    def rolling_volatility(x , rw):
+        return x.pct_change().rolling(int(rw)).std() * np.sqrt(rw)
 
 
-
-
-
-        
 
 
     
@@ -127,7 +138,14 @@ def run_formula(ticker, start_date, end_date, formula):
             'rolling_sum' : rolling_sum,
             'ema' :ema,
             'rsi' : rsi,
-            'zscore' : zscore
+            'zscore' : zscore,
+            'sma' : sma,
+            'wma':wma,
+            'vwap':vwap,
+            'momentum':momentum,
+            'roc':roc,
+            "cumulative_return":cumulative_return,
+            "rolling_volatility": rolling_volatility
             }
     
 

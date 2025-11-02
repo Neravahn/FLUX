@@ -104,6 +104,15 @@
             border-radius: 4px;
             font-weight: 600;
         }
+
+         hl2 {
+            background-color:#d50cff;
+            color: black;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
     </style>
 </head>
 
@@ -236,12 +245,18 @@
             This calculates the 10-day rolling standard deviation of the daily range
 
             <p>
-                <h2>Custom Function (upcoming)</h2>
-                <li><hl>ema(x, span)</hl>-> Exponential moving average</li>
-                <li><hl>rsi(x, span)</hl>-> Relative Strength Index</li>
-                <li><hl>zscore(x, span)</hl>-> Rolling z-scores</li>
-                <p>Users will also br able to define their own funtions directly from the UI (if the 'upcoming' in the heading
-                isn't removed its under development)</p>
+                <h2>Custom Function</h2>
+                <li><hl2>ema(x, span) </hl2>-> Exponential moving average</li>
+                <li><hl2>rsi(x, span) </hl2>-> Relative Strength Index</li>
+                <li><hl2>zscore(x, span) </hl2>-> Rolling z-scores</li>
+                <li><hl2>sma(x, rw) </hl2>-> Simple moving average</li>
+                <li><hl2>wma(x, rw) </hl2>-> Weights moving average</li>
+                <li><hl2>vwap(price, volume) </hl2>-> Volume Weighted average price</li>
+                <li><hl2>momentum(x, price) </hl2>-> Rate of change of security's price</li>
+                <li><hl2>roc(x, period) </hl2>-> Percentage change in price between the current and past price</li>
+                <li><hl2>cumulative_return(series) </hl2>-> Calculates total return over a time, assuming reinvestmen</li>
+                <li><hl2>rolling_volatility </hl2>-> Computes volatility over a rolling window</li>
+                
 
             </p>
             
