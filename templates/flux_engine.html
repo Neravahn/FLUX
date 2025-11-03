@@ -17,7 +17,7 @@
     }
 
     body {
-      background-color: #000;
+      background-color: #1b1b1b;
       color: #dbe6ff;
       height: 100vh;
       margin: 0;
@@ -40,8 +40,8 @@
     #chart-section {
       flex: 1;
       position: relative;
-      background-color: #0d0d0d;
-      border: 1px solid #f1f1f1;
+      background-color: #000000;
+      /* border: 1px solid #f1f1f1; */
       border-radius: 10px;
       overflow: hidden;
     }
@@ -84,7 +84,7 @@
     #flux-panel {
       width: 320px;
       background-color: #0d0d0d;
-      border: 1px solid #f1f1f1;
+      /* border: 1px solid #f1f1f1; */
       border-radius: 10px;
       padding: 20px;
       color: #f1f1f1;
@@ -193,10 +193,13 @@
             <option value="1h">1 hour</option>
             <option value="15m">15 minutes</option>
             <option value="5m">5 minutes</option>
+            <option value="2m">2 minutes</option>
+            <option value="1m">1 minutes</option>
             <option value="1wk">1 week</option>
             <option value="1mo">1 month</option>
           </select>
         </div>
+
         <div class="form-group">
           <label for="moving_average">Select Moving Average Type</label>
           <select id="moving_average" name="moving_average">
@@ -227,22 +230,62 @@
             placeholder="e.g., rolling_mean(close, 20) - sqrt(volume)"></textarea>
         </div>
 
+
+        <!-- ================================================ -->
+        <!--                  ALPHHA BETA                     -->
+        <!--==================================================-->
+
+        <div><h3>ALPHA BETA :</h3></div>
+
+        <div class="form-group">
+            <label for="ticker_ab">Select Stock</label>
+            <select id="ticker_ab" required>
+                <option value="AAPL">Apple (AAPL)</option>
+                <option value="GOOGL">Alphabet (GOOGL)</option>
+                <option value="MSFT">Microsoft (MSFT)</option>
+                <option value="TSLA">Tesla (TSLA)</option>
+                <option value="AMZN">Amazon (AMZN)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="benchmark">Select Benchmark</label>
+            <select id="benchmark" name="benchmark" required>
+                <option value="^GSPC">S&P 500 (^GSPC)</option>
+                <option value="^NDX">NASDAQ 100 (^NDX)</option>
+                <option value="^DJI">Dow Jones (^DJI)</option>
+                <option value="^NSEI">NIFTY 50 (^NSEI)</option>
+                <option value="^BSESN">SENSEX (^BSESN)</option>
+                <option value="BTC-USD">Bitcoin (BTC-USD)</option>
+            </select>
+        </div>
+
+        <div class="date-row">
+            <div class="form-group">
+                <label for="start">Start Date</label>
+                <input type="date" id="start" name="start_date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="end">End Date</label>
+                <input type="date" id="end" name="end_date" required>
+            </div>
+        </div>
+
         <button type="submit">ANALYZE</button>
         <div id="engine-error"></div>
       </div>
     </form>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0"></script>
+
 
 
 
   <script>
     const form = document.getElementById('flux-panel');
-    let chart;
+    let maChart;
+    let gridVisible = true;
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -251,7 +294,7 @@
       const payload = {
         ticker: form.ticker.value,
         interval: form.interval.value,
-        moving_average_type: form.analysis.value,
+        moving_average: form.moving_average.value,
         formula_1: form.formula_1.value,
         formula_2: form.formula_2.value,
         window: form.window.value
@@ -277,11 +320,11 @@
         }
 
         // Destroy existing chart
-        if (chart) chart.destroy();
+        if (maChart) maChart.destroy();
 
         // Create chart
         const ctx = document.getElementById('engine-canvas').getContext('2d');
-        chart = new Chart(ctx, {
+        maChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: data.labels,
@@ -290,29 +333,38 @@
                 label: 'Formula 1',
                 data: data.value_1,
                 borderColor: '#ff3b30',
+                borderWidth: 0.5,
                 pointRadius: 0,
-                tension: 0.1
+                backgroundColor: '#ff3b30',
+                tension: 0.4
+
               },
               {
                 label: 'Formula 2',
                 data: data.value_2,
                 borderColor: '#007AFF',
+                backgroundColor: '#007AFF',
                 pointRadius: 0,
-                tension: 0.1
+                tension: 0.4,
+                borderWidth: 0.5
               },
               {
-                label: `${payload.moving_average_type.toUpperCase()} of Close Price`,
+                label: `${payload.moving_average.toUpperCase()} of Close Price`,
                 data: data.ma_type,
                 borderColor: '#34C759',
+                backgroundColor: '#34C759',
                 pointRadius: 0,
-                tension: 0.1
+                tension: 0.4,
+                borderWidth: 0.5
               },
               {
                 label: 'Closing Price',
                 data: data.close,
                 borderColor: '#FFD60A',
+                backgroundColor: '#FFD60A',
                 pointRadius: 0,
-                tension: 0.1
+                tension: 0.4,
+                borderWidth: 0.5
               }
             ]
           },
@@ -321,7 +373,7 @@
             maintainAspectRatio: false,
             plugins: {
               legend: {
-                labels: { color: '#fff', font: { size: 14 } }
+                display: false
               },
               tooltip: {
                 backgroundColor: '#0f0f0f',
@@ -339,9 +391,11 @@
               }
             },
             scales: {
-              x: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.04)' } },
-              y: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.04)' } }
+              x: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+              y: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1)' } }
             }
+
+
           }
         });
 
@@ -350,7 +404,33 @@
         console.error(err);
       }
     });
+
+    document.getElementById('resetZoom').addEventListener("click", () => {
+      if (maChart) maChart.resetZoom();
+
+    });
+
+    document.getElementById("toggleGrid").addEventListener("click", () => {
+      gridVisible = !gridVisible;
+      if (maChart) {
+        maChart.options.scales.x.grid.color = gridVisible ? "rgba(255, 255, 255, 0.05)" : "transparent";
+        maChart.options.scales.y.grid.color = gridVisible ? "rgba(255,255,255,0.05)" : "transparent";
+        maChart.update()
+      }
+    });
+
+    document.getElementById("downloadChart").addEventListener("click", () => {
+      const link = documen.createElement("a");
+      link.download = "chart.png";
+      link.href = canvas.toDataURL("image/png")
+      link.click()
+    });
   </script>
+
+  <!--============================================-->
+  <!--           ALPHA BETA SCRIPT                -->
+  <!--============================================-->
+  
 
 
 </body>

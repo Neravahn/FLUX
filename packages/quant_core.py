@@ -168,13 +168,13 @@ def run_formula(ticker, interval, formula_1, formula_2, moving_average, window):
 
     # FORMULA PARSING 
     formula_1 = formula_1.strip()
-    data['custom_1'] = eval(formula_1,  {"__builtins__": {}}, env) if formula_1 else data['close']
+    data['custom_1'] = eval(formula_1,  {"__builtins__": {}}, env) if formula_1 else np.nan
 
     formula_2 = formula_2.strip()
-    data['custom_2'] = eval(formula_2,  {"__builtins__": {}}, env) if formula_2 else data['close']
+    data['custom_2'] = eval(formula_2,  {"__builtins__": {}}, env) if formula_2 else np.nan
 
 
-    days = data.index.strftime("%Y-%m-%d %H:%M:%S").tolist()
+    
 
 
 
@@ -190,17 +190,18 @@ def run_formula(ticker, interval, formula_1, formula_2, moving_average, window):
         data['ma'] = data['close'].rolling(window).mean()
 
     elif moving_average == 'ema':
-        data['ma'] = data['close'.ewm(window, adjust=False).mean()]
+        data['ma'] = data['close'].ewm(window, adjust=False).mean()
 
     elif moving_average == 'wma':
         weights = np.arange(1, window + 1)
         data['ma'] = data['close'].rolling(window).apply(lambda prices:np.dot(prices, weights)/ weights.sum(), raw=True)
 
-    # elif moving_average == 'vwap':
-    #     data['ma'] = (data['close'] * data['volume']).cumsum() / data['volume'].cumsum()
 
     elif moving_average == 'tma':
-        sma = data['close'].rolling(window).mean()
+        half = int(window / 2)
+        sma1 = data['close'].rolling(half).mean()
+        data['ma'] = sma1.rolling(half).mean()
+
 
     elif moving_average == 'hma':
         half = max(1, int(window/2))
@@ -212,6 +213,8 @@ def run_formula(ticker, interval, formula_1, formula_2, moving_average, window):
     elif moving_average == 'cma':
         data['ma'] = data['close'].expanding().mean()
 
+    else:
+        data['ma'] = None
 
 
 
@@ -221,12 +224,14 @@ def run_formula(ticker, interval, formula_1, formula_2, moving_average, window):
 
 
 
+    days = data.index.strftime("%Y-%m-%d %H:%M:%S").tolist()
     return   {
         'labels': days,
         'value_1': data['custom_1'].astype(float).replace({np.nan: None}).tolist(),
         'value_2': data['custom_2'].astype(float).replace({np.nan: None}).tolist(),
-        'ma_type' : data['high'].astype(float).replace({np.nan:None}).tolist(),
+        'ma_type' : data['ma'].astype(float).replace({np.nan:None}).tolist(),
         'low' : data['low'].astype(float).replace({np.nan:None}).tolist(),
         'open' : data['open'].astype(float).replace({np.nan:None}).tolist(),
-        'close' : data['close'].astype(float).replace({np.nan: None}).tolist()
+        'close' : data['close'].astype(float).replace({np.nan: None}).tolist(),
+        'high': data['high'].astype(float).replace({np.nan: None}).tolist(),
     }
