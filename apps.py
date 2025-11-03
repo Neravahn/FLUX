@@ -235,16 +235,19 @@ def rr_analysis():
 def flux_engine():
     return render_template('flux_engine.html')
 
-@app.route('/engine', methods = ['GET', 'POST'])
 @app.route('/engine', methods=['POST'])
 def engine():
-    try:
-        ticker = request.form['ticker']
-        interval = request.form['interval']
-        formula_1 = request.form['formula_1']
-        formula_2 = request.form['formula_2']
 
-        result = run_formula(ticker, interval, formula_1, formula_2)
+    data = request.get_json()
+    try:
+        ticker = data['ticker']
+        interval = data['interval']
+        formula_1 = data['formula_1']
+        formula_2 = data['formula_2']
+        moving_average = data['moving_average']
+        window = data['window']
+
+        result = run_formula(ticker, interval, formula_1, formula_2, moving_average, window)
         # print("RETURNING TO FRONTEND:", result)
         print("Returned keys:", result.keys())
 

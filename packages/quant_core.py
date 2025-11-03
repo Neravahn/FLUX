@@ -3,7 +3,7 @@ import yfinance as yf
 import numpy as np
 
 
-def run_formula(ticker, interval, formula_1, formula_2):
+def run_formula(ticker, interval, formula_1, formula_2, moving_average, window):
 
     """
     I  am making this module so that user can create their own custom moving averages without coding.
@@ -11,16 +11,19 @@ def run_formula(ticker, interval, formula_1, formula_2):
     moving average. I have used all numpy functions which can be used on both series and number
     to make a simple and understandable function which a non coder can also understand
 
-    Next I will add some custom functions as well like moving averages and other things
+    Added more custom functions like rsi, zscore etc to make it more useful and also added prebuilt moving averages
+
+    I will make it more robust but adding error handling and also more funtions so that user can create comple formulas
+    easily.
 
     """
 
-    # FETCH DATA
-    if interval in ['1m', '2m', '5m', '15', '30m']:
+    # FETCH DATA FOR ALL THE FUNCTIONS OF THE TERMINAL
+    if interval in ['1m', '2m', '5m', '15m', '30m']:
 
         period = '7d' 
     
-    elif interval in['60m', '90m']:
+    elif interval in['1h', '90m']:
         period = '60d'
 
     elif interval in ['1d', '1wk', '1mo', '3mo']:
@@ -35,7 +38,13 @@ def run_formula(ticker, interval, formula_1, formula_2):
 
 
 
+#=========================================================
+# CREATING ENVIORMENT FOR SAFELY PARSING THE FORMULA
+#=========================================================
+
+
     # ALLOWED VARIABLES , FUNCTIONS and ROLLING WINDOW
+
     allowed_var = {
         'price' : data['close'],
         'close' : data['close'],
@@ -47,6 +56,7 @@ def run_formula(ticker, interval, formula_1, formula_2):
     }
 
 
+    # ALLOWED FUNCTIONS
 
     allowed_fun = {
 
@@ -69,19 +79,20 @@ def run_formula(ticker, interval, formula_1, formula_2):
 
     }
 
-    # DEFINING ROLLING WINDOW AND OTHER FUNCTIONS CUZ LAMBA FUNCTION WAS NOT WORKING FINE
+    # ALLOWED PREDEFINED FUNCTIONS
+
     def rolling_mean(x , rw):
         return x.rolling(int(rw)).mean()
+    
 
     def rolling_std(x, rw):
         return x.rolling(int(rw)).std()
+    
 
     def rolling_sum(x, rw):
         return x.rolling(int(rw)).sum()
 
 
-
-    # DEFINING RSI
     def rsi(x, rw):
         delta = x.diff()
         gain = delta.where(delta > 0,0)
@@ -91,52 +102,42 @@ def run_formula(ticker, interval, formula_1, formula_2):
         rs= avg_gain/avg_loss
         return 100 - ( 100 / ( 1 + rs))
 
-    # DEFINING ZSCORE
+
     def zscore(x , rw):
         a = x.rolling(int(rw)).mean()
         b = x.rolling(int(rw)).std()
         return (x - a) / b
 
-    # DEFINING SIMPLE MOVING AVERAGE
+
     def sma(x, rw):
         return x.rolling(int(rw)).mean()
 
 
-    # DEFINING EXPONENTIAL MOVING AVERAGE
     def ema(x, rw):
         return x.ewm(int(rw) , adjust=False).mean()
 
 
-    # DEFINING WEIGHTED MOVING AVERAGE
     def wma(x, rw):
         weights = np.arange(1, int(rw) + 1)
         return x.rolling(int(rw)).apply(lambda prices: np.dot(prices,weights)/weights.sum(), raw=True)
 
 
-    # DEFINING VWAP
     def vwap(price, volume):
         return (price*volume).cumsum()/volume.cumsum()
 
 
-
-    # DEFINING MOMENTUM
-    def momentum(x, rw):
-        return x - x.shift(int(rw))
     def momentum(x, period):
         return x - x.shift(int(period))
     
 
-    # DEFINING ROC
     def roc(series, period):
         return (series /series.shift(period) - 1) * 100
     
 
-    # DEFINING CUMULATIVE RETURN
     def cumulative_return(series):
         return ( 1 + series.pct_change()).cumprod() - 1
     
-
-    # DEFINING ROLLING VOLATILITY
+    
     def rolling_volatility(x , rw):
         return x.pct_change().rolling(int(rw)).std() * np.sqrt(rw)
 
@@ -176,11 +177,55 @@ def run_formula(ticker, interval, formula_1, formula_2):
     days = data.index.strftime("%Y-%m-%d %H:%M:%S").tolist()
 
 
+
+
+#=========================================================
+# ADDING PREBUILT MOVING AVERAGE IF REQUESTED
+#=========================================================  
+
+    window = int(window) if window else 10
+
+
+    if moving_average == 'sma':
+        data['ma'] = data['close'].rolling(window).mean()
+
+    elif moving_average == 'ema':
+        data['ma'] = data['close'.ewm(window, adjust=False).mean()]
+
+    elif moving_average == 'wma':
+        weights = np.arange(1, window + 1)
+        data['ma'] = data['close'].rolling(window).apply(lambda prices:np.dot(prices, weights)/ weights.sum(), raw=True)
+
+    # elif moving_average == 'vwap':
+    #     data['ma'] = (data['close'] * data['volume']).cumsum() / data['volume'].cumsum()
+
+    elif moving_average == 'tma':
+        sma = data['close'].rolling(window).mean()
+
+    elif moving_average == 'hma':
+        half = max(1, int(window/2))
+        sqrt = max(1, int(np.sqrt(window)))
+        wma_half = data['close'].rolling(half).mean()
+        wma_full = data['close'].rolling(window).mean()
+        data['ma'] = ((2* wma_half) - wma_full).rolling(sqrt).mean()
+
+    elif moving_average == 'cma':
+        data['ma'] = data['close'].expanding().mean()
+
+
+
+
+
+
+
+
+
+
     return   {
-        'days': days,
-        'values_1': data['custom_1'].astype(float).replace({np.nan: None}).tolist(),
-        'values_2': data['custom_2'].astype(float).replace({np.nan: None}).tolist(),
-        'high' : data['high'].astype(float).replace({np.nan:None}).tolist(),
+        'labels': days,
+        'value_1': data['custom_1'].astype(float).replace({np.nan: None}).tolist(),
+        'value_2': data['custom_2'].astype(float).replace({np.nan: None}).tolist(),
+        'ma_type' : data['high'].astype(float).replace({np.nan:None}).tolist(),
         'low' : data['low'].astype(float).replace({np.nan:None}).tolist(),
         'open' : data['open'].astype(float).replace({np.nan:None}).tolist(),
         'close' : data['close'].astype(float).replace({np.nan: None}).tolist()

@@ -5,12 +5,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FLUX - Engine</title>
+
   <style>
     @font-face {
       font-family: 'play-regular';
       src: url("{{ url_for('static', filename='fonts/Play-Regular.ttf') }}") format("truetype");
-      font-weight: normal;
-      font-style: normal;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
@@ -24,28 +27,38 @@
       align-items: center;
     }
 
-    #chart-section {
-      position: relative;
+    /* === layout container === */
+    #main-container {
+      display: flex;
       width: 100vw;
       height: 100vh;
-      display: flex;
-      gap: 20px;
       padding: 20px;
-      box-sizing: border-box;
+      gap: 20px;
+    }
+
+    /* === chart section === */
+    #chart-section {
+      flex: 1;
+      position: relative;
+      background-color: #0d0d0d;
+      border: 1px solid #f1f1f1;
+      border-radius: 10px;
+      overflow: hidden;
     }
 
     #engine-canvas {
-      border: 1px solid #f1f1f1;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background-color: #000;
       border-radius: 10px;
-      background-color: #0d0d0d;
-      flex-grow: 1;
-      max-width: calc(100% - 340px);
     }
 
+    /* === chart control buttons === */
     #chart-controls {
       position: absolute;
-      top: 30px;
-      right: 340px;
+      top: 20px;
+      left: 20px;
       display: flex;
       gap: 10px;
     }
@@ -58,27 +71,30 @@
       border-radius: 6px;
       cursor: pointer;
       transition: background-color 0.2s;
+      font-weight: bold;
     }
 
     #chart-controls button:hover {
       background-color: #0d0d0d;
       color: white;
+      border: 1px solid #f1f1f1;
     }
 
+    /* === form panel === */
     #flux-panel {
-      width: 300px;
+      width: 320px;
       background-color: #0d0d0d;
-      border: #f1f1f1 1px solid;
+      border: 1px solid #f1f1f1;
       border-radius: 10px;
       padding: 20px;
-      height: fit-content;
+      color: #f1f1f1;
+      overflow-y: auto;
+      height: calc(100vh - 40px);
     }
 
     #flux-panel h2 {
       margin: 0 0 20px 0;
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: #f1f1f1;
+      font-size: 1.6rem;
       text-align: center;
     }
 
@@ -94,12 +110,12 @@
     }
 
     #flux-form select,
-    #flux-form input[type="date"],
-    #flux-form textarea {
+    #flux-form textarea,
+    #flux-form input[type='number'] {
       width: 100%;
       padding: 8px;
       border-radius: 4px;
-      border: 3px solid #272727;
+      border: 2px solid #272727;
       background-color: #111;
       color: #f1f1f1;
       font-family: inherit;
@@ -116,12 +132,12 @@
       padding: 12px;
       background-color: transparent;
       color: white;
-      border: #333 3px solid;
+      border: #333 2px solid;
       border-radius: 6px;
       cursor: pointer;
       font-size: 16px;
       margin-top: 20px;
-      transition: background-color 0.2s;
+      transition: all 0.2s;
     }
 
     #flux-form button[type="submit"]:hover {
@@ -129,43 +145,34 @@
       color: black;
     }
 
-    .documentation-link {
-      margin: 15px 0;
-      font-size: 14px;
-      color: #f1f1f1;
-    }
-
-    .documentation-link a {
-      color: #f1f1f1;
-      text-decoration: none;
-    }
-
-    .documentation-link a:hover {
-      text-decoration: underline;
-    }
-
     #engine-error {
       color: #ff4444;
       margin-top: 10px;
       font-size: 14px;
+      text-align: center;
     }
   </style>
 </head>
 
 <body>
-  <div id="chart-section">
-    <canvas id="engine-canvas"></canvas>
 
-    <div id="chart-controls">
-      <button id="resetZoom">Reset Zoom</button>
-      <button id="toggleGrid">Toggle Grid</button>
-      <button id="downloadChart">Download</button>
+  <div id="main-container">
+
+
+    <div id="chart-section">
+      <canvas id="engine-canvas"></canvas>
+
+      <div id="chart-controls">
+        <button id="resetZoom">RESET ZOOM</button>
+        <button id="downloadChart">DOWNLOAD</button>
+        <button id="toggleGrid">TOGGLE GRID</button>
+      </div>
     </div>
 
-    <div id="flux-panel">
-      <h2>FLUX ENGINE</h2>
+    <form id="flux-panel">
+      <div id="flux-form">
+        <h2>FLUX ENGINE</h2>
 
-      <form action="{{ url_for('engine') }}" method="POST" id="flux-form">
         <div class="form-group">
           <label for="ticker">Select Stock</label>
           <select id="ticker" name="ticker" required>
@@ -190,6 +197,23 @@
             <option value="1mo">1 month</option>
           </select>
         </div>
+        <div class="form-group">
+          <label for="moving_average">Select Moving Average Type</label>
+          <select id="moving_average" name="moving_average">
+            <option value="">Select Moving Average</option>
+            <option value="sma">Simple Moving Average (SMA)</option>
+            <option value="ema">Exponential Moving Average (EMA)</option>
+            <option value="wma">Weighted Moving Average (WMA)</option>
+            <option value="cma">Cumulative Moving Average (CMA)</option>
+            <option value="hma">Hull Moving Average (HMA)</option>
+            <option value="tma">Triangular Moving Average (TMA)</option>
+          </select>
+        </div>
+
+        <div class='form-group'>
+          <label for="window">Enter Window (only if selecting moving average)</label>
+          <input type="number" id="window" placeholder="e.g., 20">
+        </div>
 
         <div class="form-group">
           <label for="formula_1">Formula 1</label>
@@ -203,84 +227,92 @@
             placeholder="e.g., rolling_mean(close, 20) - sqrt(volume)"></textarea>
         </div>
 
-        <div class="documentation-link">
-          Don’t know how to create a formula?
-          <a href="documentation.html" target="_blank">Click here</a>
-        </div>
-
         <button type="submit">ANALYZE</button>
         <div id="engine-error"></div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
-
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0"></script>
+
+
 
   <script>
-    const ctx = document.getElementById('engine-canvas').getContext('2d');
-    let fluxChart;
+    const form = document.getElementById('flux-panel');
+    let chart;
 
-    document.getElementById('flux-form').addEventListener('submit', async function (e) {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const formData = new FormData(this);
-      const errorDiv = document.getElementById('engine-error');
-      errorDiv.textContent = "";
+
+      // Prepare payload
+      const payload = {
+        ticker: form.ticker.value,
+        interval: form.interval.value,
+        moving_average_type: form.analysis.value,
+        formula_1: form.formula_1.value,
+        formula_2: form.formula_2.value,
+        window: form.window.value
+      };
 
       try {
-        const response = await fetch('/engine', { method: 'POST', body: formData });
-        if (!response.ok) throw new Error(`Network error: ${response.status}`);
+        // Send request
+        const response = await fetch('/engine', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
         const data = await response.json();
-        console.log("✅ Data received:", data);
 
-        if (!data || !data.days || !data.close) throw new Error("Invalid data format");
+        // Show error if any
+        const errorDiv = document.getElementById('engine-error');
+        if (data.error) {
+          errorDiv.textContent = data.error;
+          return;
+        } else {
+          errorDiv.textContent = '';
+        }
 
-        // Prepare OHLC + formulas
-        const ohlc = data.open.map((o, i) => ({
-          x: new Date(data.days[i]),
-          o: o,
-          h: data.high[i],
-          l: data.low[i],
-          c: data.close[i]
-        }));
+        // Destroy existing chart
+        if (chart) chart.destroy();
 
-        const ma1 = data.values_1.map((v, i) => ({ x: new Date(data.days[i]), y: v }));
-        const ma2 = data.values_2.map((v, i) => ({ x: new Date(data.days[i]), y: v }));
-
-        if (fluxChart) fluxChart.destroy();
-
-        fluxChart = new Chart(ctx, {
-          type: 'candlestick',
+        // Create chart
+        const ctx = document.getElementById('engine-canvas').getContext('2d');
+        chart = new Chart(ctx, {
+          type: 'line',
           data: {
+            labels: data.labels,
             datasets: [
               {
-                label: 'Price',
-                data: ohlc,
-                color: {
-                  up: '#00ff00',
-                  down: '#ff3333',
-                  unchanged: '#888888'
-                }
-              },
-              {
                 label: 'Formula 1',
-                type: 'line',
-                data: ma1,
-                borderColor: '#00ffff',
-                borderWidth: 1.5,
+                data: data.value_1,
+                borderColor: '#ff3b30',
                 pointRadius: 0,
-                tension: 0.2
+                tension: 0.1
               },
               {
                 label: 'Formula 2',
-                type: 'line',
-                data: ma2,
-                borderColor: '#ff00ff',
-                borderWidth: 1.5,
+                data: data.value_2,
+                borderColor: '#007AFF',
                 pointRadius: 0,
-                tension: 0.2
+                tension: 0.1
+              },
+              {
+                label: `${payload.moving_average_type.toUpperCase()} of Close Price`,
+                data: data.ma_type,
+                borderColor: '#34C759',
+                pointRadius: 0,
+                tension: 0.1
+              },
+              {
+                label: 'Closing Price',
+                data: data.close,
+                borderColor: '#FFD60A',
+                pointRadius: 0,
+                tension: 0.1
               }
             ]
           },
@@ -288,31 +320,39 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              legend: { labels: { color: '#f1f1f1' } },
-              tooltip: { mode: 'index', intersect: false }
+              legend: {
+                labels: { color: '#fff', font: { size: 14 } }
+              },
+              tooltip: {
+                backgroundColor: '#0f0f0f',
+                titleColor: '#fff',
+                bodyColor: '#ddd'
+              },
+              zoom: {
+                pan: { enabled: true, mode: 'xy' },
+                zoom: {
+                  wheel: { enabled: true },
+                  pinch: { enabled: true },
+                  drag: { enabled: true },
+                  mode: 'xy'
+                }
+              }
             },
             scales: {
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'day'
-                },
-                ticks: { color: '#f1f1f1' },
-                grid: { color: '#333' }
-              },
-              y: {
-                ticks: { color: '#f1f1f1' },
-                grid: { color: '#333' }
-              }
+              x: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+              y: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.04)' } }
             }
           }
         });
 
       } catch (err) {
-        console.error("❌ Error fetching/rendering data:", err);
-        errorDiv.textContent = "Error fetching or rendering data: " + err.message;
+        document.getElementById('engine-error').textContent = 'Something went wrong.';
+        console.error(err);
       }
     });
   </script>
+
+
 </body>
+
 </html>
