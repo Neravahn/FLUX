@@ -222,6 +222,121 @@ def run_formula(ticker, interval, formula_1, formula_2, moving_average, window):
         data['bb_lower'] = data['marw'] - (data['close'].rolling(window).std() *2)
         data['ma'] = np.nan
 
+    elif moving_average == 'smma':
+        close = data['close']
+        smma = pd.Series(index=close.index, dtype=float)
+        smma.iloc[window- 1] = close.iloc[:window].mean()
+        for i in range(window, len(close)):
+            prev =smma.iloc[i -1]
+            smma.iloc[i] = (prev * (window -1) + close.iloc[i]) / window
+        data['ma'] = smma
+
+
+    elif moving_average == 'kama':
+        close = data['close']
+        fast = 2
+        slow = 30
+
+        kama = pd.Series(index =close.index, dtype = float)
+        kama.iloc[window - 1] = close.iloc[:window].mean()
+
+
+        for i in range(window, len(close)):
+            change = abs(close.iloc[i] - close.iloc[i - window])
+            volatility = np.sum(np.abs(close.iloc[i - window + 1: i + 1]))
+            er = change / volatility if volatility != 0 else 0
+
+            fast_sc = 2 / (fast +1)
+            slow_sc = 2 / (slow +1)
+            sc = (er * (fast_sc - slow_sc) + slow_sc) ** 2
+
+            kama.iloc[i] = kama.iloc[i-1] + sc * (close.iloc[i] - kama.iloc[i - 1])
+            data['ma'] = kama
+
+            
+
+
+
+    elif moving_average =='alma':
+        close = data['close']
+        offset = 0.5 # PRESETTING THE OFFSET AND SIGMA VALUE ( atleast for now)
+        sigma = 6
+
+
+        alma = pd.Series(index = close.index, dtype=float)
+        for i in range(window, len(close)):
+            subset = close.iloc[i - window:i].values
+            n = len(subset)
+            m = offset * (n -1 )
+            s = n / sigma
+            weights = np.exp(-((np.arange(n) - m)** 2) / ( 2 * s * s))
+            alma.iloc[i] = np.sum(subset * weights) / np.sum(weights)
+
+        data['ma'] = alma
+    
+
+
+
+    elif moving_average == 'frama':
+        close = data['close']
+        n = window
+        frama = pd.Series(index = close.index, dtype=float)
+        frama.iloc[n-1] = close.iloc[:n].mean()
+
+        # for i in range(n, len(close)):
+        #     segment = close.iloc[i - n:i]
+        #     half = n //2
+
+        #     n1 = segment.iloc[:half].max() - segment.iloc[:half].min()
+        #     n2 = segment.iloc[half:].max() - segment.iloc[half:].min()
+        #     n3 = segment.max() - segment.min()
+
+        #     if n1 <= 0 or n2 <=0 or n3 <=0:
+        #         d = 1
+        #     else:
+        #         d = (np.log(n1+n2) - np.log(n3)) / np.log(2)
+
+        #         # ADDING ADAPTIVE SMOOTHNING FACTOR
+
+        #         alpha = np.exp(-4.6 * (d-1))
+        #         alpha = max(min(alpha, 1), 0.01)
+
+
+        #         # ADDING RECURSIVE SMOOTHING
+        #         prev = frama.iloc[i - 1]
+        #         frama.iloc[i] = prev + alpha * (close.iloc[i] -prev)
+    
+        # data['ma'] = frama
+
+
+    # THIS ONE WAS TRACING THE EXACT PATH OF CLOSE LETS TRY OTHER USING FC AND SC
+
+        fc, sc = 1, 198
+
+        for i in range(n, len(close)):
+            segment = close.iloc[i - n:i]
+            half = n//2
+
+            n1 = segment.iloc[:half].max() - segment.iloc[:half].min()
+            n2 = segment.iloc[half:].max() - segment.iloc[half:].min()
+            n3 = segment.max90 - segment.min()
+
+            if n1 <= 0 or n2<= 0 or n3<= 0:
+                d =  1.5
+
+            else:
+                d = (np.log(n1 + n2) - np.log(n3)) / np.log(2)
+                d = np.clip(d, 1, 2)
+
+            alpha = np.exp( - 4.6 * (d -1))
+            alpha = (alpha - np.exp(-4.6)) / (1- np.exp(-4.6))
+            alpha = alpha * (2/ (fc +1) - 2 / (sc +1)) +2 / (sc +1)
+            alpha  = np.clip(alpha, 0.01, 1)
+
+            prev = frama.iloc[i - 1]
+            frama.iloc[i] = prev + alpha * (close.iloc[i] - prev)
+
+        data['ma'] = frama
 
     else:
         data['ma'] = None

@@ -1,283 +1,716 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLUX ENGINE - Documentation</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FLUX — Complete Formula Reference</title>
 
-    <style>
-       @font-face {
-            font-family: 'comforta-regular';
-            src: url("{{ url_for('static', filename='fonts/Comfortaa-VariableFont_wght.ttf') }}") format("truetype");
-        }
+  <!-- MathJax -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Comfortaa', sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
+  <!-- Fonts (sleek italic feel) -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:ital,wght@1,300;1,400&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
 
-        .container {
-            width: 75%;
-            max-width: 1000px;
-        }
+  <style>
+    /* Page layout */
+    :root{
+      --bg: #07080a;
+      --panel: #0f1113;
+      --muted: #cfd6db;
+      --accent: #66b2ff;
+      --gold: #f5c156;
+      --box: #14171a;
+      --border: #24303a;
+      --mono: 'Roboto Mono', monospace;
+      --serif-italic: 'Roboto Slab', serif;
+      --toc-bg: rgba(102,178,255,0.04);
+    }
 
-        h1 {
-            color: #d50cff;
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-        }
+    html,body{
+      height:100%;
+      margin:0;
+      background:var(--bg);
+      color:var(--muted);
+      font-family: var(--serif-italic);
+      font-style: italic;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
 
-        h2 {
-            color: #d50cff;
-            margin-top: 30px;
-        }
+    .wrap{
+      display:flex;
+      justify-content:center;
+      padding:36px 20px;
+    }
 
-        pre {
-            background: #d50cff;
-            color: #fff;
-            padding: 4px 6px;
-            border-radius: 6px;
-            width: fit-content;
-            font-size: 1rem;
-        }
+    #main{
+      width:100%;
+      max-width: 980px;
+      background: var(--panel);
+      border:1px solid var(--border);
+      padding:32px;
+      box-sizing:border-box;
+      border-radius:8px;
+    }
 
-        code {
-            font-family: 'Consolas', monospace;
-        }
+    h1{
+      margin:0 0 8px 0;
+      color:var(--accent);
+      text-align:center;
+      font-weight:300;
+      letter-spacing:1.6px;
+      font-style: normal;
+      font-family: 'Roboto Slab', serif;
+    }
 
-        p {
-            font-size: 1rem;
-        }
+    h2{
+      font-style: normal;
+      color:var(--gold);
+      font-weight:400;
+      margin:28px 0 12px;
+      padding-left:8px;
+      border-left:4px solid var(--accent);
+      font-family: 'Roboto Slab', serif;
+    }
 
-        ol {
-            margin-left: 25px;
-            line-height: 1.8;
-        }
+    p.lead{
+      margin:6px 0 16px;
+      color:#bfc8cf;
+      font-size:0.98rem;
+      font-style: italic;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            background: #111;
-            border-radius: 8px;
-            overflow: hidden;
-        }
+    /* Table of contents */
+    .toc{
+      background: var(--toc-bg);
+      border:1px solid var(--border);
+      padding:12px 14px;
+      border-radius:6px;
+      margin:14px 0;
+      color:#cfe8ff;
+      font-family: var(--mono);
+      font-style: normal;
+      line-height:1.6;
+    }
+    .toc a{
+      color:var(--accent);
+      text-decoration:none;
+    }
+    .toc ul{ margin:8px 0 0 18px; padding:0; }
+    .toc li{ margin:6px 0; font-size:0.95rem; }
 
-        th,
-        td {
-            border: 1px solid #333;
-            padding: 10px 12px;
-            text-align: left;
-        }
+    /* Formula box */
+    .formula-box{
+      background: var(--box);
+      border:1px solid var(--border);
+      padding:14px 16px;
+      margin:16px 0;
+      border-left:6px solid var(--accent);
+      border-radius:6px;
+      font-family: var(--mono);
+      font-style: normal;
+      color:#d7dde2;
+      font-size:0.95rem;
+    }
 
-        th {
-            background-color: #d50cff;
-            color: #fff;
-            font-weight: bold;
-        }
+    .formula-box h3{
+      margin:0 0 8px 0;
+      color:var(--gold);
+      font-weight:400;
+      font-family: 'Roboto Slab', serif;
+      font-style: normal;
+      font-size:1rem;
+    }
 
-        td code {
-            background: #222;
-            color: #d5b3ff;
-            padding: 2px 5px;
-            border-radius: 4px;
-        }
+    .formula-box .desc{
+      color:#bfc8cf;
+      margin-top:8px;
+      font-size:0.92rem;
+    }
 
-        tr:nth-child(even) {
-            background-color: #0b0b0b;
-        }
+    .formula-box .math{
+      font-size:1.02rem;
+      margin-top:6px;
+      color:#dfeaf6;
+    }
 
-        hl {
-            color: #d50cff;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
+    ul,ol{
+      margin:8px 0 12px 20px;
+      color:#bcc6cc;
+      font-style: italic;
+    }
 
-         hl2 {
-            background-color:#d50cff;
-            color: black;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
+    hr.sep{
+      border:none;
+      height:1px;
+      background:var(--border);
+      margin:28px 0;
+      opacity:1;
+    }
 
-    </style>
+    @media (max-width:700px){
+      #main{ padding:20px; }
+      .formula-box{ padding:12px; font-size:0.92rem; }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>FLUX ENGINE - Documentation</h1>
+  <div class="wrap">
+    <div id="main">
+      <h1>FLUX — Complete Formula Reference</h1>
+      <p class="lead">Comprehensive list of technical indicators, averages, oscillators, volatility models and regression metrics — every entry is plottable on a line/scatter chart.</p>
 
-        <div>
-            <h2>Overview</h2>
-            <p>
-                <strong>FLUX ENGINE</strong> is a modular financial analysis tool that allows users to build and
-                visualize
-                their <strong>own trading formulas</strong> without writing any code.
-                It uses <strong>NumPy</strong> and <strong>Pandas</strong> for computation, <strong>yFinance</strong>
-                for live
-                market data, and <strong>Chart.js</strong> for interactive visualizations.
-            </p>
+      <!-- Table of Contents -->
+      <div class="toc" id="toc">
+        <strong>Table of Contents</strong>
+        <ul>
+          <li><a href="#system">1 · System overview</a></li>
+          <li><a href="#moving">2 · Moving averages</a></li>
+          <li><a href="#oscillators">3 · Oscillators & momentum</a></li>
+          <li><a href="#volume">4 · Volume & weighted measures</a></li>
+          <li><a href="#volatility">5 · Volatility & risk</a></li>
+          <li><a href="#stochastic">6 · Stochastic models & Monte Carlo</a></li>
+          <li><a href="#regression">7 · Regression & correlation</a></li>
+          <li><a href="#trend">8 · Trend & directional indicators</a></li>
+          <li><a href="#vol_ext">9 · Volatility & range systems</a></li>
+          <li><a href="#volume_ext">10 · Volume & flow systems</a></li>
+          <li><a href="#stats">11 · Statistical & risk metrics</a></li>
+          <li><a href="#ml">12 · Forecasting & simulation</a></li>
+        </ul>
+      </div>
 
-            <p>Example usage:</p>
-            <pre><code>rolling_mean(close, 5)</code></pre>
-            <p>The engine parses and executes them safely, returning a chart instantly.</p>
+      <!-- Intro / System -->
+      <h2 id="system">1 · System overview</h2>
+      <ul>
+        <li>Frontend: HTML, JavaScript (Chart.js)</li>
+        <li>Backend: Python (Flask, pandas, numpy)</li>
+        <li>Data: Yahoo Finance / APIs</li>
+      </ul>
 
-            <h2>Features</h2>
-            <li>Custom one-line formulas (no coding required)</li>
-            <li>Built-in financial variables and NumPy functions</li>
-            <li>Rolling window operations (e.g., rolling_mean, rolling_std, rolling_sum)</li>
-            <li>Interactive charts with zoom, pan, and fullscreen</li>
-            <li>Works directly on live market data via Yahoo Finance</li>
-            <li>Download chart as image</li>
+      <hr class="sep">
 
-            <h2>Formula Syntax</h2>
-            <p>Formulas are entered as simple one-liners using predefined variables and functions.</p>
-            <p>Some examples:</p>
+      <!-- MOVING AVERAGES -->
+      <h2 id="moving">2 · Moving averages</h2>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Formula</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Simple</td>
-                        <td><code>sqrt(close)</code></td>
-                        <td>Square root of closing price</td>
-                    </tr>
-                    <tr>
-                        <td>Rolling</td>
-                        <td><code>rolling_mean(close, 10)</code></td>
-                        <td>10-day simple moving average</td>
-                    </tr>
-                    <tr>
-                        <td>Combined</td>
-                        <td><code>rolling_mean(close, 10) - rolling_mean(close, 50)</code></td>
-                        <td>Moving average crossover</td>
-                    </tr>
-                    <tr>
-                        <td>Volume-based</td>
-                        <td><code>log(volume)</code></td>
-                        <td>Logarithmic volume scaling</td>
-                    </tr>
-                    <tr>
-                        <td>Custom</td>
-                        <td><code>(high + low + close) / 3</code></td>
-                        <td>Typical price calculation</td>
-                    </tr>
-                </tbody>
-            </table>
+      <!-- existing entries (kept intact) -->
+      <div class="formula-box">
+        <h3>Simple Moving Average — SMA</h3>
+        <div class="math">\[
+          SMA_t=\frac{1}{n}\sum_{i=0}^{n-1}P_{t-i}
+        \]</div>
+        <div class="desc">Basic mean of last <code>n</code> prices.</div>
+      </div>
 
-            <h2>Core Concept</h2>
-            <li><strong><hl>User Input Formula -</hl></strong> The user enters a single-line mathematical formula.</li>
-            <li><strong><hl>Safe Formula Parser -</hl></strong> The formula runs in a
-                <hl>restricted Python environment</hl> exposing only approved variables and functions.</li>
-            <li><strong><hl>Live Visuals -</hl></strong> The output is plotted directly using
-                <hl>Chart.js</hl> with zoom, pan, and download capabilities.</li>
+      <div class="formula-box">
+        <h3>Exponential Moving Average — EMA</h3>
+        <div class="math">\[
+          EMA_t=\alpha P_t + (1-\alpha) EMA_{t-1},\quad \alpha=\frac{2}{n+1}
+        \]</div>
+        <div class="desc">Recursive EMA with smoothing factor <code>α</code>.</div>
+      </div>
 
-            <h2>Built-in Variables</h2>
-            <li><hl>close</hl> → Closing price</li>
-            <li><hl>open</hl> → Opening price</li>
-            <li><hl>high</hl> → Highest price</li>
-            <li><hl>low</hl> → Lowest price</li>
-            <li><hl>volume</hl> → Trading volume</li>
-            <li><hl>price</hl> → Alias for Closing price</li>
+      <div class="formula-box">
+        <h3>Weighted Moving Average — WMA / LWMA</h3>
+        <div class="math">\[
+          WMA_t=\frac{\sum_{i=0}^{n-1} w_{i} P_{t-i}}{\sum_{i=0}^{n-1} w_i}
+        \]</div>
+        <div class="desc">Linear or custom weights <code>w_i</code> (recent prices usually heavier).</div>
+      </div>
 
-            <h2>Supported Functions</h2>
-            <p>The following functions are allowed inside user formulas:</p>
+      <div class="formula-box">
+        <h3>Cumulative Moving Average — CMA</h3>
+        <div class="math">\[
+          CMA_t=\frac{1}{t}\sum_{i=1}^{t}P_i
+        \]</div>
+        <div class="desc">Average of all samples from start to time <code>t</code>.</div>
+      </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Functions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Basic Math</td>
-                        <td><code>abs, sqrt, power, exp, log, log10, sign, round, floor, ceil, clip, mod</code></td>
-                    </tr>
-                    <tr>
-                        <td>Statistical</td>
-                        <td><code>mean, median, std, var, min, max, sum, prod, percentile, quantile, nanmean, nanstd</code></td>
-                    </tr>
-                    <tr>
-                        <td>Conditional</td>
-                        <td><code>where, maximum, minimum, isfinite, isnan, all, any</code></td>
-                    </tr>
-                    <tr>
-                        <td>Trigonometric</td>
-                        <td><code>sin, cos, tan, arcsin, arccos, arctan, degrees, radians, sinh, cosh, tanh</code></td>
-                    </tr>
-                    <tr>
-                        <td>Series Operations</td>
-                        <td><code>diff(x, n=1), cumsum(x), cumprod(x)</code></td>
-                    </tr>
-                </tbody>
-            </table>
-            <p>All functions operate on <hl>Pandas Series</hl> or <hl>NumPy arrays</hl> for vectorized performance.</p>
+      <div class="formula-box">
+        <h3>Smoothed Moving Average — SMMA (RMA)</h3>
+        <div class="math">\[
+          SMMA_t=\frac{SMMA_{t-1}\times (n-1) + P_t}{n}
+        \]</div>
+        <div class="desc">Often used in RSI calculations; reduces noise gently.</div>
+      </div>
 
-            <p>
-                <h2>Rolling Window Operations</h2>
-                <li><hl>rolling_mean(x , n)</hl>-> Rolling mean with window n</li>
-                <li><hl>rolling_std(x , n)</hl>-> Rolling standard deviation with window n</li>
-                <li><hl>rolling_sum(x , n)</hl>-> Rolling sum</li>
-            </p>
-            <p>Example</p>
-            <pre><code>rolling_mean(high - low , 5)</code></pre>
-            This calculates the 10-day rolling standard deviation of the daily range
+      <div class="formula-box">
+        <h3>Triangular Moving Average — TMA</h3>
+        <div class="math">\[
+          TMA_t = SMA\big(SMA(P, n), n\big)
+        \]</div>
+        <div class="desc">Double-smoothed SMA for extra smoothness.</div>
+      </div>
 
-            <p>
-                <h2>Custom Function</h2>
-                <li><hl2>ema(x, span) </hl2>-> Exponential moving average</li>
-                <li><hl2>rsi(x, span) </hl2>-> Relative Strength Index</li>
-                <li><hl2>zscore(x, span) </hl2>-> Rolling z-scores</li>
-                <li><hl2>sma(x, rw) </hl2>-> Simple moving average</li>
-                <li><hl2>wma(x, rw) </hl2>-> Weights moving average</li>
-                <li><hl2>vwap(price, volume) </hl2>-> Volume Weighted average price</li>
-                <li><hl2>momentum(x, price) </hl2>-> Rate of change of security's price</li>
-                <li><hl2>roc(x, period) </hl2>-> Percentage change in price between the current and past price</li>
-                <li><hl2>cumulative_return(series) </hl2>-> Calculates total return over a time, assuming reinvestmen</li>
-                <li><hl2>rolling_volatility </hl2>-> Computes volatility over a rolling window</li>
-                
+      <div class="formula-box">
+        <h3>Hull Moving Average — HMA</h3>
+        <div class="math">\[
+          HMA = WMA\Big( 2\cdot WMA(P, n/2) - WMA(P, n),\ \sqrt{n}\Big)
+        \]</div>
+        <div class="desc">Designed to reduce lag while keeping smoothness.</div>
+      </div>
 
-            </p>
-            
-            <p>
-                <h2>Error Hangling</h2>
-                <p>Flux engine validates every formula before execution</p>
-                <li>Invalid formulas show an error message (e.g., syntax issue or missing parameters)</li>
-                <li>All unsafe Python built-ins are disabled</li>
-                <li>Missing data points (NaN) are automatically handled</li>
-            </p>
+      <div class="formula-box">
+        <h3>Double &amp; Triple EMA — DEMA, TEMA</h3>
+        <div class="math">\[
+          DEMA = 2\cdot EMA - EMA(EMA)
+        \qquad
+          TEMA = 3\cdot EMA - 3\cdot EMA(EMA) + EMA(EMA(EMA))
+        \]</div>
+        <div class="desc">Multi-layer EMA to further reduce lag.</div>
+      </div>
 
-            <p>
-                <h2>Future Improvements</h2>
-                <li>Add custom function regitration from the UI (eg., defining EMA or RSI on-the-fly)</li>
-                <li>Implement a formula validator before evaluation to highlight errors instantly</li>
-                <li>Enable multi-formula  comparison charts for the strategy backtesting</li>
-                <li>Introduce performance coaching for faster re[eated computations</li>
-            </p>
+      <div class="formula-box">
+        <h3>Kaufman Adaptive Moving Average — KAMA</h3>
+        <div class="math">\[
+          KAMA_{t} = KAMA_{t-1} + SC_t\cdot (P_t - KAMA_{t-1}),
+          \quad SC_t=\left(\frac{ER_t\cdot(2/(fast+1)-2/(slow+1))+2/(slow+1)}{}\right)^2
+        \]</div>
+        <div class="desc">Adaptive smoothing using Efficiency Ratio <code>ER</code> (fast/slow settings).</div>
+      </div>
 
-        </div>
+      <div class="formula-box">
+        <h3>Arnaud Legoux MA — ALMA</h3>
+        <div class="math">\[
+          ALMA= \frac{\sum w_i P_{t-i}}{\sum w_i},\quad w_i=\exp\Big(-\frac{(i-m)^2}{2\sigma^2}\Big)
+        \]</div>
+        <div class="desc">Gaussian-weighted moving average with tunable offset <code>m</code> and <code>σ</code>.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Fractal Adaptive MA — FRAMA</h3>
+        <div class="math">\[
+          FRAMA_t = FRAMA_{t-1} + \alpha_t (P_t - FRAMA_{t-1}), \quad \alpha_t = \exp\left(-\frac{4.6(D_t-D_{t-1})}{D_t}\right)
+        \]</div>
+        <div class="desc">Adapts smoothing by estimating market fractal dimension <code>D</code>.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Variable/Volume MA — VMA / VWMA</h3>
+        <div class="math">\[
+          VWMA = \frac{\sum P_t\cdot V_t}{\sum V_t}
+        \]</div>
+        <div class="desc">Volume-weighted average — weights by traded volume.</div>
+      </div>
+
+      <!-- Added from flux_todo: explicit VWAP already exists in volume section; keep moving-average extras here -->
+      <!-- End moving averages -->
+
+      <hr class="sep">
+
+      <!-- OSCILLATORS -->
+      <h2 id="oscillators">3 · Oscillators & momentum</h2>
+
+      <div class="formula-box">
+        <h3>Relative Strength Index — RSI</h3>
+        <div class="math">\[
+          RSI = 100 - \frac{100}{1 + RS},\quad RS = \frac{Average\ Gain}{Average\ Loss}
+        \]</div>
+        <div class="desc">Momentum oscillator (0–100); typical thresholds: 70/30.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>MACD (Moving Average Convergence Divergence)</h3>
+        <div class="math">\[
+          MACD = EMA_{12} - EMA_{26},\qquad Signal = EMA(MACD,9)
+        \]</div>
+        <div class="desc">Trend-following momentum indicator; histogram = MACD − Signal.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Stochastic Oscillator (%K / %D)</h3>
+        <div class="math">\[
+          \%K = \frac{C - L_n}{H_n - L_n}\times 100,\quad \%D = SMA(\%K, 3)
+        \]</div>
+        <div class="desc">Momentum relative to recent high-low range; thresholds ~80/20.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Williams %R</h3>
+        <div class="math">\[
+          \%R = \frac{H_n - C_t}{H_n - L_n}\times -100
+        \]</div>
+        <div class="desc">Like stochastic but inverted scale (−100 to 0).</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Rate of Change — ROC & Momentum</h3>
+        <div class="math">\[
+          ROC = \frac{P_t - P_{t-n}}{P_{t-n}}\times 100,\quad Momentum = P_t - P_{t-n}
+        \]</div>
+        <div class="desc">Measures speed and absolute change over <code>n</code> periods.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>TRIX (Triple Exponential Oscillator)</h3>
+        <div class="math">\[
+          TRIX = \frac{EMA_{3x}(close) - EMA_{3x}(close)_{prev}}{EMA_{3x}(close)_{prev}}\times 100
+        \]</div>
+        <div class="desc">Percentage rate-of-change of triple-smoothed EMA; filters noise.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Commodity Channel Index — CCI</h3>
+        <div class="math">\[
+          CCI = \frac{TP - SMA(TP)}{0.015 \times MD},\quad TP=\frac{H+L+C}{3}
+        \]</div>
+        <div class="desc">Measures variation from typical price (TP).</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Money Flow Index — MFI</h3>
+        <div class="math">\[
+          MFI = 100 - \frac{100}{1 + MR},\quad MR = \frac{Positive\ Money\ Flow}{Negative\ Money\ Flow}
+        \]</div>
+        <div class="desc">Volume-weighted RSI-like oscillator (0–100).</div>
+      </div>
+
+      <!-- Added extras -->
+      <div class="formula-box">
+        <h3>True Strength Index — TSI</h3>
+        <div class="math">\[
+          TSI = 100 \times \frac{EMA(EMA(\Delta P, r), s)}{EMA(EMA(|\Delta P|, r), s)}
+        \]</div>
+        <div class="desc">Smoothed momentum oscillator that reduces noise and highlights trend strength (common params r=25, s=13).</div>
+      </div>
+
+      <!-- End oscillators -->
+
+      <hr class="sep">
+
+      <!-- VOLUME & VWAP -->
+      <h2 id="volume">4 · Volume & weighted measures</h2>
+
+      <div class="formula-box">
+        <h3>On-Balance Volume — OBV</h3>
+        <div class="math">\[
+          OBV_t = OBV_{t-1} + \begin{cases} V_t & C_t > C_{t-1} \\ -V_t & C_t < C_{t-1} \\ 0 & \text{else} \end{cases}
+        \]</div>
+        <div class="desc">Cumulative volume flow indicator (trend confirmation).</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Volume Weighted Average Price — VWAP</h3>
+        <div class="math">\[
+          VWAP_t = \frac{\sum_{i=1}^t P_i V_i}{\sum_{i=1}^t V_i}
+        \]</div>
+        <div class="desc">Intraday volume-weighted price (useful for execution benchmarks).</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Chaikin Money Flow — CMF</h3>
+        <div class="math">\[
+          CMF = \frac{\sum_{i=1}^n (CLV_i \cdot V_i)}{\sum_{i=1}^n V_i},\quad CLV=\frac{(C-L)-(H-C)}{H-L}
+        \]</div>
+        <div class="desc">Measures money flow over a period using close location value (CLV).</div>
+      </div>
+
+      <!-- Added from todo -->
+      <div class="formula-box">
+        <h3>Accumulation/Distribution Line — ADL</h3>
+        <div class="math">\[
+          ADL_t = ADL_{t-1} + \frac{(C_t - L_t) - (H_t - C_t)}{H_t - L_t} \times V_t
+        \]</div>
+        <div class="desc">Cumulative volume-based indicator using close-location multiplier to measure buying/selling pressure.</div>
+      </div>
+
+      <!-- End volume -->
+
+      <hr class="sep">
+
+      <!-- VOLATILITY & RISK -->
+      <h2 id="volatility">5 · Volatility & risk</h2>
+
+      <div class="formula-box">
+        <h3>Bollinger Bands</h3>
+        <div class="math">\[
+          Middle = SMA(n),\quad Upper = SMA(n)+k\sigma,\quad Lower = SMA(n)-k\sigma
+        \]</div>
+        <div class="desc">Volatility envelope based on standard deviation <code>σ</code>.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Average True Range — ATR</h3>
+        <div class="math">\[
+          TR=\max(H-L,\ |H-C_{prev}|,\ |L-C_{prev}|),\quad ATR=EMA(TR,n)
+        \]</div>
+        <div class="desc">Average of true range — measures volatility in price movement.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Log Returns & Variance</h3>
+        <div class="math">\[
+          r_t=\ln\frac{P_t}{P_{t-1}},\quad Var(r)=E[(r-\bar r)^2]
+        \]</div>
+        <div class="desc">Log returns additive over time; variance measures dispersion.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Sharpe Ratio</h3>
+        <div class="math">\[
+          Sharpe=\frac{R_p - R_f}{\sigma_p}
+        \]</div>
+        <div class="desc">Risk-adjusted return vs risk-free rate.</div>
+      </div>
+
+      <!-- Added risk metrics -->
+      <div class="formula-box">
+        <h3>Sortino Ratio</h3>
+        <div class="math">\[
+          Sortino=\frac{R_p - R_f}{\sigma_{down}}
+        \]</div>
+        <div class="desc">Risk-adjusted return focusing only on downside volatility (penalizes negative returns more).</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Value at Risk — VaR (Parametric)</h3>
+        <div class="math">\[
+          VaR_{p,\alpha} = \mu_p + z_\alpha \sigma_p
+        \]</div>
+        <div class="desc">Statistical estimate of the maximum expected loss at confidence level <code>α</code> (parametric/normal method).</div>
+      </div>
+
+      <!-- End volatility -->
+
+      <hr class="sep">
+
+      <!-- STOCHASTIC / BROWNIAN / MONTE CARLO -->
+      <h2 id="stochastic">6 · Stochastic models & Monte Carlo</h2>
+
+      <div class="formula-box">
+        <h3>Geometric Brownian Motion (GBM)</h3>
+        <div class="math">\[
+          dS_t = \mu S_t dt + \sigma S_t dW_t \quad\Rightarrow\quad S_t=S_0\exp\Big((\mu-\tfrac{1}{2}\sigma^2)t+\sigma W_t\Big)
+        \]</div>
+        <div class="desc">Model for continuous-time stock price evolution; basis for Monte Carlo simulation.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Discrete-time Random Walk</h3>
+        <div class="math">\[
+          S_{t+1} = S_t + \mu \Delta t + \sigma \sqrt{\Delta t}\ \epsilon_t,\quad \epsilon_t\sim N(0,1)
+        \]</div>
+        <div class="desc">Euler discretization useful for simulation and scenario generation.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Monte Carlo — Basic Price Simulation</h3>
+        <div class="math">\[
+          \hat{S}_{T}^{(i)} = S_0\exp\Big((\mu-\tfrac{1}{2}\sigma^2)T + \sigma \sqrt{T} Z^{(i)}\Big),\quad Z^{(i)}\sim N(0,1)
+        \]</div>
+        <div class="desc">Simulate many paths and compute statistics (mean, quantiles, VaR).</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Monte Carlo — Portfolio VaR (Basic)</h3>
+        <div class="math">\[
+          \text{Simulate portfolio value }V_T^{(i)}\text{ across paths and estimate }VaR_\alpha = \text{quantile}_\alpha(\Delta V^{(i)})
+        \]</div>
+        <div class="desc">Monte Carlo approach to portfolio-level VaR — flexible for non-normal returns and correlated assets.</div>
+      </div>
+
+      <!-- End stochastic -->
+
+      <hr class="sep">
+
+      <!-- REGRESSION AND RELATIONSHIP -->
+      <h2 id="regression">7 · Regression & correlation</h2>
+
+      <div class="formula-box">
+        <h3>Linear regression / slope</h3>
+        <div class="math">\[
+          \beta_{OLS} = \frac{\sum (x_i-\bar x)(y_i-\bar y)}{\sum (x_i-\bar x)^2}
+        \]</div>
+        <div class="desc">Slope of best-fit line (used in trend/regression channels).</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Beta & Alpha (CAPM)</h3>
+        <div class="math">\[
+          \beta=\frac{Cov(R_i,R_m)}{Var(R_m)},\qquad \alpha=R_i - [R_f + \beta(R_m-R_f)]
+        \]</div>
+        <div class="desc">Market sensitivity and excess return vs benchmark.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Coefficient of determination — R²</h3>
+        <div class="math">\[
+          R^2 = 1 - \frac{SS_{res}}{SS_{tot}}
+        \]</div>
+        <div class="desc">Fraction of variance explained by regression model.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Covariance & Correlation</h3>
+        <div class="math">\[
+          Cov(X,Y)=E[(X-\bar X)(Y-\bar Y)],\quad Corr(X,Y)=\frac{Cov(X,Y)}{\sigma_X\sigma_Y}
+        \]</div>
+        <div class="desc">Statistical relationships; correlation bounded between −1 and 1.</div>
+      </div>
+
+      <!-- End regression -->
+
+      <hr class="sep">
+
+      <!-- NEW SECTION: Trend & Directional -->
+      <h2 id="trend">8 · Trend & directional indicators</h2>
+
+      <div class="formula-box">
+        <h3>Average Directional Index — ADX</h3>
+        <div class="math">\[
+          DX = \frac{|+DI - -DI|}{|+DI + -DI|}\times 100,\quad ADX = SMA(DX, n)
+        \]</div>
+        <div class="desc">Measures trend strength by comparing positive and negative directional movement.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Parabolic SAR</h3>
+        <div class="math">\[
+          SAR_{t+1} = SAR_t + AF \times (EP - SAR_t)
+        \]</div>
+        <div class="desc">Trailing stop-based indicator that flips when price reverses; uses acceleration factor <code>AF</code> and extreme point <code>EP</code>.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Ichimoku Cloud (key lines)</h3>
+        <div class="math">\[
+          Tenkan = \frac{H_9 + L_9}{2},\quad Kijun = \frac{H_{26}+L_{26}}{2},\quad SenkouA=\frac{Tenkan+Kijun}{2}
+        \]</div>
+        <div class="desc">Multi-line system (Tenkan, Kijun, Senkou spans) that indicates support/resistance and trend direction.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Donchian Channel</h3>
+        <div class="math">\[
+          Upper = \max(H_{t-n+1..t}),\quad Lower = \min(L_{t-n+1..t})
+        \]</div>
+        <div class="desc">High/low breakout channel popular for trend-following systems.</div>
+      </div>
+
+      <!-- End trend -->
+
+      <hr class="sep">
+
+      <!-- Volatility extensions -->
+      <h2 id="vol_ext">9 · Volatility & range systems</h2>
+
+      <div class="formula-box">
+        <h3>Keltner Channel</h3>
+        <div class="math">\[
+          Middle = EMA(n),\quad Upper = Middle + k \times ATR(n),\quad Lower = Middle - k \times ATR(n)
+        \]</div>
+        <div class="desc">ATR-based volatility envelope around an EMA — smoother alternative to Bollinger Bands.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>SuperTrend</h3>
+        <div class="math">\[
+          BasicBand = \frac{H+L}{2} \pm Multiplier \times ATR,\quad SuperTrend \text{ flips based on price crossing bands}
+        \]</div>
+        <div class="desc">Trend-following indicator built from ATR and directional price breaks — useful for stop placement.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Donchian / Channel (already present) — note</h3>
+        <div class="desc">Included under Trend section; useful for breakout/volatility strategies.</div>
+      </div>
+
+      <!-- End volatility extensions -->
+
+      <hr class="sep">
+
+      <!-- Volume extensions -->
+      <h2 id="volume_ext">10 · Volume & flow systems</h2>
+
+      <div class="formula-box">
+        <h3>Volume Weighted MA (VWMA) — note</h3>
+        <div class="math">\[
+          VWMA_t = \frac{\sum_{i=1}^n P_i V_i}{\sum_{i=1}^n V_i}
+        \]</div>
+        <div class="desc">Already listed in Moving Averages as VMA/VWMA; highlighted here for volume-focused workflows.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Chaikin / ADL / OBV — note</h3>
+        <div class="desc">ADL, CMF, and OBV are already documented in Volume section; useful to compare them together for money flow analysis.</div>
+      </div>
+
+      <!-- Additional volume tools -->
+      <div class="formula-box">
+        <h3>On-Balance Volume (reminder)</h3>
+        <div class="desc">See Volume section — used for simple directional volume confirmation.</div>
+      </div>
+
+      <!-- End volume extensions -->
+
+      <hr class="sep">
+
+      <!-- Statistical & risk metrics -->
+      <h2 id="stats">11 · Statistical & risk metrics</h2>
+
+      <div class="formula-box">
+        <h3>Z-Score (Normalization)</h3>
+        <div class="math">\[
+          Z_t = \frac{X_t - \mu}{\sigma}
+        \]</div>
+        <div class="desc">Standard score — useful for comparing indicators across scales.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Rolling Correlation</h3>
+        <div class="math">\[
+          \rho_{t}(x,y) = Corr(x_{t-n+1..t}, y_{t-n+1..t})
+        \]</div>
+        <div class="desc">Time-varying correlation between two series over a rolling window.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Autocorrelation (lag k)</h3>
+        <div class="math">\[
+          \rho_k = \frac{E[(X_t-\bar X)(X_{t-k}-\bar X)]}{Var(X)}
+        \]</div>
+        <div class="desc">Measure of persistence / serial correlation in a time series.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Maximum Drawdown</h3>
+        <div class="math">\[
+          MDD = \max_t \left(1 - \frac{V_t}{\max_{s \le t} V_s}\right)
+        \]</div>
+        <div class="desc">Worst peak-to-trough decline — standard downside risk metric.</div>
+      </div>
+
+      <div class="formula-box">
+        <h3>Skewness & Kurtosis</h3>
+        <div class="math">\[
+          Skew = E\left[\left(\frac{X-\mu}{\sigma}\right)^3\right],\quad Kurt = E\left[\left(\frac{X-\mu}{\sigma}\right)^4\right]
+        \]</div>
+        <div class="desc">Distribution shape metrics useful for risk modelling.</div>
+      </div>
+
+      <!-- End statistical -->
+
+      <hr class="sep">
+
+      <!-- Forecast / ML / advanced -->
+      <h2 id="ml">12 · Forecasting & advanced models</h2>
+
+      <div class="formula-box">
+        <h3>Kalman Filter — simple state estimate</h3>
+        <div class="math">\[
+          \hat{x}_{t|t} = \hat{x}_{t|t-1} + K_t (y_t - H \hat{x}_{t|t-1})
+        \]</div>
+        <div class="desc">Recursive filter for denoising and adaptive smoothing — can be used as an adaptive moving average.</div>
+      </div>
+
+     
+
+      <hr class="sep">
+
+      <p class="lead">— End of FLUX formula reference —</p>
     </div>
+  </div>
 </body>
-
 </html>
