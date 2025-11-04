@@ -44,7 +44,7 @@ document.getElementById('submit_alphabeta').addEventListener('click', async (e) 
                         label: 'Actual Returns',
                         data: data.actual_points,
                         borderColor: '#ff3b30',
-                        pointRadius: 0,
+                        pointRadius: 1,
                         backgroundColor: '#ff3b30'
 
                     },
@@ -53,7 +53,7 @@ document.getElementById('submit_alphabeta').addEventListener('click', async (e) 
                         data: data.regression_line,
                         borderColor: '#007aff',
                         backgroundColor: '#007aff',
-                        pointRadius: 0
+                        pointRadius: 1
                     },
 
                 ]

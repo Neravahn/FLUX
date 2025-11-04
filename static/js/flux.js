@@ -43,6 +43,7 @@ document.getElementById('submit_formula').addEventListener('click', async (e) =>
       data: {
         labels: data.labels,
         datasets: [
+          //FORMULA PLOT
           {
             label: 'Formula 1',
             data: data.value_1,
@@ -61,6 +62,8 @@ document.getElementById('submit_formula').addEventListener('click', async (e) =>
             tension: 0.4,
             borderWidth: 0.5
           },
+
+          //MOVING AVERAGE PLOT
           {
             label: `${payload.moving_average.toUpperCase()} of Close Price`,
             data: data.ma_type,
@@ -70,6 +73,40 @@ document.getElementById('submit_formula').addEventListener('click', async (e) =>
             tension: 0.4,
             borderWidth: 0.5
           },
+
+          
+          //BOLLINGER BAND PLOT
+          {
+          label: 'MIDDLE BAND',
+          data:data.marw,
+          pointRadius: 0,
+          tension: 0.4,
+          borderWidth:0.5,
+          borderColor: '#B0B0B0',
+          backgroundColor: '#B0B0B0'
+          },
+          {
+            label:'UPPER BAND',
+            data: data.bb_upper,
+            pointRadius:0,
+            tension:0.4,
+            borderWidth:0.5,
+            borderColor: '#9B5DE5',
+            backgroundColor: '#9B5DE5'
+          },
+          {
+            label: 'LOWER BAND',
+            data: data.bb_lower,
+            pointRadius: 0,
+            tension: 0.4,
+            borderWidth: 0.5,
+            borderColor: '#00BBF9',
+            backgroundColor: '#00BBF9'
+          },
+
+          
+
+          // PRICE PLOT===
           {
             label: 'Closing Price',
             data: data.close,

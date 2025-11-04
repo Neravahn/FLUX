@@ -216,6 +216,13 @@ def run_formula(ticker, interval, formula_1, formula_2, moving_average, window):
     elif moving_average == 'cma':
         data['ma'] = data['close'].expanding().mean()
 
+    elif moving_average =='bollinger_bands':
+        data['marw'] = data['close'].rolling(window).mean()
+        data['bb_upper'] = data['marw'] + (data['close'].rolling(window).std() *2)
+        data['bb_lower'] = data['marw'] - (data['close'].rolling(window).std() *2)
+        data['ma'] = np.nan
+
+
     else:
         data['ma'] = None
 
@@ -228,11 +235,33 @@ def run_formula(ticker, interval, formula_1, formula_2, moving_average, window):
 
 
     days = data.index.strftime("%Y-%m-%d %H:%M:%S").tolist()
+    if 'marw' not in data:
+        data['marw'] = np.nan
+    if 'bb_upper' not in data:
+        data['bb_upper'] = np.nan
+    if 'bb_lower' not in data:
+        data['bb_lower'] = np.nan
+    if 'ma' not in data:
+        data['ma'] = np.nan
+
     return   {
         'labels': days,
+
+        #FORMULA PLOT
         'value_1': data['custom_1'].astype(float).replace({np.nan: None}).tolist(),
         'value_2': data['custom_2'].astype(float).replace({np.nan: None}).tolist(),
+
+        #MOVING AVERAGE PLOT
         'ma_type' : data['ma'].astype(float).replace({np.nan:None}).tolist(),
+
+        #BOLLINGER BAND PLOT
+        'marw': data['marw'].astype(float).replace({np.nan: None}).tolist(),
+        'bb_upper': data['bb_upper'].astype(float).replace({np.nan: None}).tolist(),
+        'bb_lower': data['bb_lower'].astype(float).replace({np.nan: None}).tolist(),
+
+
+        #PRICE
+        #  PLOT
         'low' : data['low'].astype(float).replace({np.nan:None}).tolist(),
         'open' : data['open'].astype(float).replace({np.nan:None}).tolist(),
         'close' : data['close'].astype(float).replace({np.nan: None}).tolist(),
