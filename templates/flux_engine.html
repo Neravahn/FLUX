@@ -6,162 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FLUX - Engine</title>
 
-  <style>
-    @font-face {
-      font-family: 'play-regular';
-      src: url("{{ url_for('static', filename='fonts/Play-Regular.ttf') }}") format("truetype");
-    }
+  <!-- Chart.js + Zoom Plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
 
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      background-color: #1b1b1b;
-      color: #dbe6ff;
-      height: 100vh;
-      margin: 0;
-      font-family: 'play-regular', Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* === layout container === */
-    #main-container {
-      display: flex;
-      width: 100vw;
-      height: 100vh;
-      padding: 20px;
-      gap: 20px;
-    }
-
-    /* === chart section === */
-    #chart-section {
-      flex: 1;
-      position: relative;
-      background-color: #000000;
-      /* border: 1px solid #f1f1f1; */
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    #engine-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-      background-color: #000;
-      border-radius: 10px;
-    }
-
-    /* === chart control buttons === */
-    #chart-controls {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      display: flex;
-      gap: 10px;
-    }
-
-    #chart-controls button {
-      background-color: #f1f1f1;
-      color: black;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      font-weight: bold;
-    }
-
-    #chart-controls button:hover {
-      background-color: #0d0d0d;
-      color: white;
-      border: 1px solid #f1f1f1;
-    }
-
-    /* === form panel === */
-    #flux-panel {
-      width: 320px;
-      background-color: #0d0d0d;
-      /* border: 1px solid #f1f1f1; */
-      border-radius: 10px;
-      padding: 20px;
-      color: #f1f1f1;
-      overflow-y: auto;
-      height: calc(100vh - 40px);
-    }
-
-    #flux-panel h2 {
-      margin: 0 0 20px 0;
-      font-size: 1.6rem;
-      text-align: center;
-    }
-
-    #flux-form .form-group {
-      margin-bottom: 15px;
-    }
-
-    #flux-form label {
-      display: block;
-      margin-bottom: 5px;
-      font-size: 14px;
-      color: #f1f1f1;
-    }
-
-    #flux-form select,
-    #flux-form textarea,
-    #flux-form input[type='number'] {
-      width: 100%;
-      padding: 8px;
-      border-radius: 4px;
-      border: 2px solid #272727;
-      background-color: #111;
-      color: #f1f1f1;
-      font-family: inherit;
-      box-sizing: border-box;
-    }
-
-    #flux-form textarea {
-      height: 80px;
-      resize: vertical;
-    }
-
-    #flux-form button[type="submit"] {
-      width: 100%;
-      padding: 12px;
-      background-color: transparent;
-      color: white;
-      border: #333 2px solid;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 20px;
-      transition: all 0.2s;
-    }
-
-    #flux-form button[type="submit"]:hover {
-      background-color: #f1f1f1;
-      color: black;
-    }
-
-    #engine-error {
-      color: #ff4444;
-      margin-top: 10px;
-      font-size: 14px;
-      text-align: center;
-    }
-  </style>
+  <!--LINK CSS-->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/flux.css') }}">
 </head>
 
 <body>
-
   <div id="main-container">
-
-
+    <!-- === CHART SECTION === -->
     <div id="chart-section">
       <canvas id="engine-canvas"></canvas>
-
       <div id="chart-controls">
         <button id="resetZoom">RESET ZOOM</button>
         <button id="downloadChart">DOWNLOAD</button>
@@ -169,8 +26,10 @@
       </div>
     </div>
 
-    <form id="flux-panel">
-      <div id="flux-form">
+    <!-- === FORM CONTAINER (scrollable) === -->
+    <div id="form-container">
+      <!-- === FLUX ENGINE FORM === -->
+      <form id="flux-panel">
         <h2>FLUX ENGINE</h2>
 
         <div class="form-group">
@@ -194,7 +53,7 @@
             <option value="15m">15 minutes</option>
             <option value="5m">5 minutes</option>
             <option value="2m">2 minutes</option>
-            <option value="1m">1 minutes</option>
+            <option value="1m">1 minute</option>
             <option value="1wk">1 week</option>
             <option value="1mo">1 month</option>
           </select>
@@ -213,9 +72,9 @@
           </select>
         </div>
 
-        <div class='form-group'>
-          <label for="window">Enter Window (only if selecting moving average)</label>
-          <input type="number" id="window" placeholder="e.g., 20">
+        <div class="form-group">
+          <label for="window">Enter Window</label>
+          <input type="number" id="window" name="window" placeholder="e.g., 20">
         </div>
 
         <div class="form-group">
@@ -230,161 +89,63 @@
             placeholder="e.g., rolling_mean(close, 20) - sqrt(volume)"></textarea>
         </div>
 
-        <button type="submit">ANALYZE</button>
+        <button type="submit" id="submit_formula">ANALYZE</button>
         <div id="engine-error"></div>
-      </div>
-    </form>
+      </form>
+
+      <!-- === ALPHA BETA FORM === -->
+      <form id="alphabeta-panel">
+        <h2>ALPHA BETA</h2>
+
+        <div class="form-group">
+          <label for="ticker_alphabeta">Select Stock</label>
+          <select id="ticker_alphabeta" name="ticker_alphabeta" required>
+            <option value="AAPL">Apple (AAPL)</option>
+            <option value="GOOGL">Alphabet (GOOGL)</option>
+            <option value="MSFT">Microsoft (MSFT)</option>
+            <option value="TSLA">Tesla (TSLA)</option>
+            <option value="AMZN">Amazon (AMZN)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="benchmark">Select Benchmark</label>
+          <select id="benchmark" name="benchmark" required>
+            <option value="^GSPC">S&P 500 (^GSPC)</option>
+            <option value="^NDX">NASDAQ 100 (^NDX)</option>
+            <option value="^DJI">Dow Jones (^DJI)</option>
+            <option value="^NSEI">NIFTY 50 (^NSEI)</option>
+            <option value="^BSESN">SENSEX (^BSESN)</option>
+            <option value="BTC-USD">Bitcoin (BTC-USD)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="interval">Select Interval</label>
+          <select id="interval_alphabeta" name="interval" required>
+            <option value="">Select interval</option>
+            <option value="1d">1 day</option>
+            <option value="1h">1 hour</option>
+            <option value="15m">15 minutes</option>
+            <option value="5m">5 minutes</option>
+            <option value="2m">2 minutes</option>
+            <option value="1m">1 minute</option>
+            <option value="1wk">1 week</option>
+            <option value="1mo">1 month</option>
+          </select>
+        </div>
+
+        <button type="button" id="submit_alphabeta">ANALYZE</button>
+        <div id="engine-error"></div>
+      </form>
+    </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
 
 
 
-
-  <script>
-    const form = document.getElementById('flux-panel');
-    let maChart;
-    let gridVisible = true;
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      // Prepare payload
-      const payload = {
-        ticker: form.ticker.value,
-        interval: form.interval.value,
-        moving_average: form.moving_average.value,
-        formula_1: form.formula_1.value,
-        formula_2: form.formula_2.value,
-        window: form.window.value
-      };
-
-      try {
-        // Send request
-        const response = await fetch('/engine', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        // Show error if any
-        const errorDiv = document.getElementById('engine-error');
-        if (data.error) {
-          errorDiv.textContent = data.error;
-          return;
-        } else {
-          errorDiv.textContent = '';
-        }
-
-        // Destroy existing chart
-        if (maChart) maChart.destroy();
-
-        // Create chart
-        const ctx = document.getElementById('engine-canvas').getContext('2d');
-        maChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: data.labels,
-            datasets: [
-              {
-                label: 'Formula 1',
-                data: data.value_1,
-                borderColor: '#ff3b30',
-                borderWidth: 0.5,
-                pointRadius: 0,
-                backgroundColor: '#ff3b30',
-                tension: 0.4
-
-              },
-              {
-                label: 'Formula 2',
-                data: data.value_2,
-                borderColor: '#007AFF',
-                backgroundColor: '#007AFF',
-                pointRadius: 0,
-                tension: 0.4,
-                borderWidth: 0.5
-              },
-              {
-                label: `${payload.moving_average.toUpperCase()} of Close Price`,
-                data: data.ma_type,
-                borderColor: '#34C759',
-                backgroundColor: '#34C759',
-                pointRadius: 0,
-                tension: 0.4,
-                borderWidth: 0.5
-              },
-              {
-                label: 'Closing Price',
-                data: data.close,
-                borderColor: '#FFD60A',
-                backgroundColor: '#FFD60A',
-                pointRadius: 0,
-                tension: 0.4,
-                borderWidth: 0.5
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false
-              },
-              tooltip: {
-                backgroundColor: '#0f0f0f',
-                titleColor: '#fff',
-                bodyColor: '#ddd'
-              },
-              zoom: {
-                pan: { enabled: true, mode: 'xy' },
-                zoom: {
-                  wheel: { enabled: true },
-                  pinch: { enabled: true },
-                  drag: { enabled: true },
-                  mode: 'xy'
-                }
-              }
-            },
-            scales: {
-              x: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-              y: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1)' } }
-            }
-
-
-          }
-        });
-
-      } catch (err) {
-        document.getElementById('engine-error').textContent = 'Something went wrong.';
-        console.error(err);
-      }
-    });
-
-    document.getElementById('resetZoom').addEventListener("click", () => {
-      if (maChart) maChart.resetZoom();
-
-    });
-
-    document.getElementById("toggleGrid").addEventListener("click", () => {
-      gridVisible = !gridVisible;
-      if (maChart) {
-        maChart.options.scales.x.grid.color = gridVisible ? "rgba(255, 255, 255, 0.05)" : "transparent";
-        maChart.options.scales.y.grid.color = gridVisible ? "rgba(255,255,255,0.05)" : "transparent";
-        maChart.update()
-      }
-    });
-
-    document.getElementById("downloadChart").addEventListener("click", () => {
-      const link = documen.createElement("a");
-      link.download = "chart.png";
-      link.href = canvas.toDataURL("image/png")
-      link.click()
-    });
-  </script>
+  <!-- LINK EXTERNAL JAVASCCRIPTS-->
+  <script src="{{ url_for('static', filename='js/flux.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/alphabeta.js') }}"></script>
 </body>
 
 </html>

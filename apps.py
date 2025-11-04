@@ -171,33 +171,6 @@ def m_a_analysis():
     return jsonify(result)
 
         
-
-@app.route('/beta_alpha')
-def beta_alpha():
-    return render_template('beta_alpha.html')
-
-@app.route('/beta_alpha_analysis', methods = ['GET', 'POST'])
-def beta_alpha_analysis():
-    if request.method == 'POST':
-        ticker = request.form['ticker']
-        benchmark = request.form['benchmark']
-        start_date = request.form['start_date']
-        end_date = request.form['end_date']
-        interval = request.form['interval']
-
-        alpha, beta, performance, interpretartion, image_base64 = calculate_beta_alpha(ticker, benchmark, start_date, end_date, interval)
-
-        return render_template(
-            'beta_alpha_result.html',
-            ticker = ticker,
-            benchmark = benchmark,
-            alpha = alpha,
-            beta = beta,
-            performance = performance,
-            interpretation = interpretartion,
-            plot_image = image_base64
-        )
-
 @app.route('/risk_return_summary')
 def risk_return_summary():
     return render_template('risk_return_main.html')
@@ -258,6 +231,25 @@ def engine():
 
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+
+@app.route('/alphabeta_engine', methods = ['POST'])
+def alphabeta_engine():
+    data = request.get_json()
+    try:
+        ticker = data['ticker_alphabeta']
+        benchmark = data['benchmark']
+        interval = data['interval']
+
+        result = calculate_beta_alpha(ticker, benchmark, interval)
+
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+    
+
 
 
 

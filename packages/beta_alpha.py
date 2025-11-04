@@ -6,23 +6,35 @@ import io , base64
 from sklearn.linear_model import LinearRegression
 
 
-def calculate_beta_alpha(ticker, benchmark, start_date, end_date, intervals='1d'):
-    stock_df = yf.download(ticker, start= start_date, end = end_date, interval=intervals)
-    bench_df = yf.download(benchmark, start = start_date, end = end_date, interval=intervals)
+def calculate_beta_alpha(ticker, benchmark, interval):
+    if interval in ['1m', '2m', '5m', '15m', '30m']:
+        period = '7d'
 
-    for df in [stock_df, bench_df]:
-        if isinstance(df.columns, pd.MultiIndex):
-            df.columns = df.columns.get_level_values(0)
-        df.columns = [col.lower() for col in df.columns]
-        
+    elif interval in ['1h', '90m']:
+        period = '60d'
+
+    elif interval in ['1d', '1wk', '1mo', '3mo']:
+        period = 'max'
+
+    if not interval:
+        period = '1d'
+
+    stock_df = yf.download(ticker, period = period, interval = interval)
+    if isinstance(stock_df.columns, pd.MultiIndex):
+        stock_df.columns = stock_df.columns.get_level_values(0)
+    stock_df.columns = [col.lower() for col in stock_df.columns]
+
+
+    bench_df = yf.download(benchmark, period= period, interval = interval)
+    if isinstance(bench_df.columns, pd.MultiIndex):
+        bench_df.columns = bench_df.columns.get_level_values(0)
+    bench_df.columns = [col.lower() for col in bench_df.columns]
+
 
     
-    # if isinstance(bench_df.columns, pd.MultiIndex):
-    #     bench_df.columns = bench_df.columns.get_level_values(1)
-    # bench_df.columns = [col.lower() for col in bench_df.columns]
 
     if stock_df.empty or bench_df.empty :
-        return None, None
+        return {'error' : 'No data available for the selected stock/benchmark pair'}
     
     
     stock_df['return'] = stock_df['close'].pct_change()
@@ -40,7 +52,7 @@ def calculate_beta_alpha(ticker, benchmark, start_date, end_date, intervals='1d'
     merged = merged.dropna()
 
     if merged.empty:
-        return None, None ,'not enough overlapping'
+        return {'error' : 'Not enough overlapping data points'}
     
     x = merged['bench_return'].values.reshape(-1, 1)
     y = merged['stock_return'].values.reshape(-1, 1)
@@ -53,32 +65,26 @@ def calculate_beta_alpha(ticker, benchmark, start_date, end_date, intervals='1d'
 
     y_prediction = model.predict(x)
 
-    plt.figure(figsize=(8, 5))
-    plt.scatter(merged['bench_return'], merged['stock_return'],color='skyblue')
-    plt.plot(merged['bench_return'], y_prediction,color='red', label = 'regression line')
-    plt.title(f'Beta-Alpha analysis {ticker} vs {benchmark}')
-    plt.xlabel(f'{benchmark} return')
-    plt.ylabel(f'{ticker} return')
-    plt.legend()
-    plt.grid(True, alpha = 0.3)
+    #CREATING DATA FOR CHART.JS
 
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png', bbox_inches ='tight')
-    buffer.seek(0)
-    image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
-    plt.close()
+    actual_points = [
+        {'x': float(b), 'y':float(s)}
+        for b, s in zip(merged['bench_return'], merged['stock_return'])
+    ]
 
-    if beta>1:
-        interpretation = f'{ticker} is **more volatile** than the benchmark {benchmark}'
-    elif beta<1:
-        interpretation = f'{ticker} is **less volatile** than the benchmark {benchmark}'
-    else:
-        interpretation = f'{ticker} **moves in line** with benchmatk {benchmark}'
+    regression_line = [
+        {'x': float(b), 'y': float(p)}
+        for b, p in zip(merged['bench_return'], y_prediction.flatten())
+    ]
 
-    if alpha > 0:
-        performance = f"Positive alpha -> {ticker} **outperformed** the benchmark after adjusting for risk"
+    result = {
+        'alpha': float(alpha),
+        'beta': float(beta),
+        "actual_points": actual_points,
+        'regression_line': regression_line
+    }
 
-    else:
-        performance = f'Negative alph -> {ticker} **underperformed** the benchmark after adjusting for risk'
 
-    return round(alpha, 5), round(beta, 3),performance,  interpretation, image_base64
+    return result
+
+
