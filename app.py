@@ -1,15 +1,9 @@
 from flask import Flask, render_template, url_for, request, jsonify
-import yfinance as yf
-import pandas as pd
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import io
-import base64
 from packages.beta_alpha import calculate_beta_alpha
 from packages.quant_core import run_formula
-import traceback
-import numpy as np
+
+
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -75,3 +69,5 @@ def documentation():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
