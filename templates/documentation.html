@@ -101,8 +101,8 @@
     .toc ul{ margin:8px 0 0 18px; padding:0; }
     .toc li{ margin:6px 0; font-size:0.95rem; }
 
-    /* Formula box */
-    .formula-box{
+    /* Formula box & manual card (shared style) */
+    .card{
       background: var(--box);
       border:1px solid var(--border);
       padding:14px 16px;
@@ -113,9 +113,10 @@
       font-style: normal;
       color:#d7dde2;
       font-size:0.95rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
     }
 
-    .formula-box h3{
+    .card h3{
       margin:0 0 8px 0;
       color:var(--gold);
       font-weight:400;
@@ -124,22 +125,70 @@
       font-size:1rem;
     }
 
-    .formula-box .desc{
+    .card .desc{
       color:#bfc8cf;
       margin-top:8px;
       font-size:0.92rem;
     }
 
-    .formula-box .math{
+    .card .math{
       font-size:1.02rem;
       margin-top:6px;
       color:#dfeaf6;
+    }
+
+    .manual-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    .manual-title{
+      text-align:center;
+      color:var(--accent);
+      font-family: 'Roboto Slab', serif;
+      font-style: normal;
+      margin-bottom:6px;
+      letter-spacing:1.2px;
+    }
+
+    .muted-note{
+      color:#aeb9bf;
+      font-size:0.92rem;
+      margin-top:6px;
     }
 
     ul,ol{
       margin:8px 0 12px 20px;
       color:#bcc6cc;
       font-style: italic;
+    }
+
+    code{
+      background: rgba(255,255,255,0.02);
+      padding:2px 6px;
+      border-radius:4px;
+      font-family: var(--mono);
+      font-style: normal;
+      color:#dfeaf6;
+    }
+
+    .back-top{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: linear-gradient(90deg, rgba(102,178,255,0.12), rgba(245,193,86,0.04));
+      color: var(--accent);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-family: var(--mono);
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    }
+
+    .back-top:hover{
+      transform: translateY(-3px);
     }
 
     hr.sep{
@@ -152,7 +201,7 @@
 
     @media (max-width:700px){
       #main{ padding:20px; }
-      .formula-box{ padding:12px; font-size:0.92rem; }
+      .card{ padding:12px; font-size:0.92rem; }
     }
   </style>
 </head>
@@ -160,6 +209,85 @@
 <body>
   <div class="wrap">
     <div id="main">
+      <!-- NEW: INSIDE FLUX manual (card-styled to match formula-boxes) -->
+      <h1 class="manual-title">⚡ INSIDE FLUX — A Quick Navigation Guide ⚡</h1>
+
+      <div class="manual-grid">
+        <div class="card" id="inside-flux-what">
+          <h3>1 · What is FLUX?</h3>
+          <div class="desc">FLUX is a financial analytics and visualization platform that fetches market data, computes indicators (SMA, EMA, RSI, etc.), and plots them interactively. Designed for traders, analysts and curious non-finance users — you don't need to be an expert to use it.</div>
+          <div class="muted-note">Tip: This guide explains the interface and simple interpretation — formulas are below in the Formula Reference section.</div>
+        </div>
+
+        <div class="card" id="inside-flux-getting-started">
+          <h3>2 · Getting started (5 simple steps)</h3>
+          <ol>
+            <li><code>Select Ticker</code> — Select a ticker (e.g. <code>AAPL</code>, <code>RELIANCE.NS</code>).</li>
+            <li><code>Choose Interval</code> — Pick a timeframe: <code>1d</code>, <code>1h</code>, <code>15m</code> etc.</li>
+            <li><code>Select Indicator (optional)</code> — Pick from moving averages, oscillators, volatility, regression, etc.</li>
+            <li><code>Run / Plot</code> — Click the button to fetch data and draw the charts.</li>
+            <li><code>Inspect & Compare</code> — Hover on the chart to read exact values and toggle indicators to compare.</li>
+          </ol>
+        </div>
+
+        <div class="card" id="inside-flux-interface">
+          <h3>3 · Interface overview</h3>
+          <ul>
+            <li><b>Ticker Input:</b> The symbol you want to analyze.</li>
+            <li><b>Benchmark (optional):</b> Use for Beta/Alpha (e.g. <code>^NSEI</code>).</li>
+            <li><b>Indicator Panel:</b> Dropdown with SMA, EMA, RSI, MACD, ATR, VaR, etc.</li>
+            <li><b>Run Button:</b> Executes backend calculation (Flask → pandas → Chart.js).</li>
+            <li><b>Chart Area:</b> Interactive plot showing price + chosen indicators.</li>
+            <li><b>Insights / Docs:</b> Opens this combined guide & reference page.</li>
+          </ul>
+        </div>
+
+        <div class="card" id="inside-flux-use-cases">
+          <h3>4 · Common use-cases (what to try)</h3>
+          <ul>
+            <li><b>Trend spotting:</b> SMA / EMA / MACD for direction and cross signals.</li>
+            <li><b>Volatility check:</b> ATR or Bollinger Bands to measure movement size.</li>
+            <li><b>Momentum:</b> RSI / Stochastic for overbought / oversold cues.</li>
+            <li><b>Risk & performance:</b> Sharpe, Sortino, VaR for evaluating returns vs risk.</li>
+            <li><b>Comparisons:</b> Alpha–Beta to understand sensitivity vs a benchmark.</li>
+          </ul>
+        </div>
+
+        <div class="card" id="inside-flux-interpretation">
+          <h3>5 · Quick interpretation tips</h3>
+          <ul>
+            <li><b>Uptrend:</b> Price and moving averages trending upward; higher highs.</li>
+            <li><b>Downtrend:</b> Price below moving averages and moving down.</li>
+            <li><b>Overbought (RSI &gt; 70):</b> Price may be stretched — watch for reversal signals.</li>
+            <li><b>Oversold (RSI &lt; 30):</b> Price may be cheap relative to recent action — possible bounce.</li>
+            <li><b>Volatility spike:</b> ATR or wide Bollinger Bands = larger price moves expected.</li>
+          </ul>
+        </div>
+
+        <div class="card" id="inside-flux-troubleshoot">
+          <h3>6 · Troubleshooting</h3>
+          <ul>
+            <li>Chart empty → check ticker spelling and network. Some tickers require exchange suffix (e.g. <code>.NS</code>).</li>
+            <li>Indicator flat → insufficient data range or constant values; increase lookback window.</li>
+            <li>Slow or laggy → reduce simultaneous indicators or use a coarser interval (e.g. 1d).</li>
+            <li>Numbers differ from other tools → ensure same data source, interval and adjustments (splits/dividends).</li>
+          </ul>
+        </div>
+
+        <div class="card" id="inside-flux-for-non-finance">
+          <h3>7 · For non-finance users — keep it simple</h3>
+          <div class="desc">You don’t need to memorize formulas. Use visual cues: trend direction, momentum (RSI), volatility (ATR/Bollinger). Hover charts to read values and rely on the legend to identify lines. Think: <em>observe</em> — FLUX calculates the math for you.</div>
+        </div>
+      </div>
+
+      <!-- quick jump link to formula reference -->
+      <div style="text-align:center;margin-top:10px;">
+        <a href="#toc" style="color:var(--accent); text-decoration:none; font-family:var(--mono);">Jump to Formula Reference ↓</a>
+      </div>
+
+      <hr class="sep">
+
+      <!-- Original heading preserved -->
       <h1>FLUX — Complete Formula Reference</h1>
       <p class="lead">Comprehensive list of technical indicators, averages, oscillators, volatility models and regression metrics — every entry is plottable on a line/scatter chart.</p>
 
@@ -196,7 +324,7 @@
       <h2 id="moving">2 · Moving averages</h2>
 
       <!-- existing entries (kept intact) -->
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Simple Moving Average — SMA</h3>
         <div class="math">\[
           SMA_t=\frac{1}{n}\sum_{i=0}^{n-1}P_{t-i}
@@ -204,7 +332,7 @@
         <div class="desc">Basic mean of last <code>n</code> prices.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Exponential Moving Average — EMA</h3>
         <div class="math">\[
           EMA_t=\alpha P_t + (1-\alpha) EMA_{t-1},\quad \alpha=\frac{2}{n+1}
@@ -212,7 +340,7 @@
         <div class="desc">Recursive EMA with smoothing factor <code>α</code>.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Weighted Moving Average — WMA / LWMA</h3>
         <div class="math">\[
           WMA_t=\frac{\sum_{i=0}^{n-1} w_{i} P_{t-i}}{\sum_{i=0}^{n-1} w_i}
@@ -220,7 +348,7 @@
         <div class="desc">Linear or custom weights <code>w_i</code> (recent prices usually heavier).</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Cumulative Moving Average — CMA</h3>
         <div class="math">\[
           CMA_t=\frac{1}{t}\sum_{i=1}^{t}P_i
@@ -228,7 +356,7 @@
         <div class="desc">Average of all samples from start to time <code>t</code>.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Smoothed Moving Average — SMMA (RMA)</h3>
         <div class="math">\[
           SMMA_t=\frac{SMMA_{t-1}\times (n-1) + P_t}{n}
@@ -236,7 +364,7 @@
         <div class="desc">Often used in RSI calculations; reduces noise gently.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Triangular Moving Average — TMA</h3>
         <div class="math">\[
           TMA_t = SMA\big(SMA(P, n), n\big)
@@ -244,7 +372,7 @@
         <div class="desc">Double-smoothed SMA for extra smoothness.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Hull Moving Average — HMA</h3>
         <div class="math">\[
           HMA = WMA\Big( 2\cdot WMA(P, n/2) - WMA(P, n),\ \sqrt{n}\Big)
@@ -252,7 +380,7 @@
         <div class="desc">Designed to reduce lag while keeping smoothness.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Double &amp; Triple EMA — DEMA, TEMA</h3>
         <div class="math">\[
           DEMA = 2\cdot EMA - EMA(EMA)
@@ -262,7 +390,7 @@
         <div class="desc">Multi-layer EMA to further reduce lag.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Kaufman Adaptive Moving Average — KAMA</h3>
         <div class="math">\[
           KAMA_{t} = KAMA_{t-1} + SC_t\cdot (P_t - KAMA_{t-1}),
@@ -271,7 +399,7 @@
         <div class="desc">Adaptive smoothing using Efficiency Ratio <code>ER</code> (fast/slow settings).</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Arnaud Legoux MA — ALMA</h3>
         <div class="math">\[
           ALMA= \frac{\sum w_i P_{t-i}}{\sum w_i},\quad w_i=\exp\Big(-\frac{(i-m)^2}{2\sigma^2}\Big)
@@ -279,7 +407,7 @@
         <div class="desc">Gaussian-weighted moving average with tunable offset <code>m</code> and <code>σ</code>.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Fractal Adaptive MA — FRAMA</h3>
         <div class="math">\[
           FRAMA_t = FRAMA_{t-1} + \alpha_t (P_t - FRAMA_{t-1}), \quad \alpha_t = \exp\left(-\frac{4.6(D_t-D_{t-1})}{D_t}\right)
@@ -287,7 +415,7 @@
         <div class="desc">Adapts smoothing by estimating market fractal dimension <code>D</code>.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Variable/Volume MA — VMA / VWMA</h3>
         <div class="math">\[
           VWMA = \frac{\sum P_t\cdot V_t}{\sum V_t}
@@ -295,7 +423,6 @@
         <div class="desc">Volume-weighted average — weights by traded volume.</div>
       </div>
 
-      <!-- Added from flux_todo: explicit VWAP already exists in volume section; keep moving-average extras here -->
       <!-- End moving averages -->
 
       <hr class="sep">
@@ -303,7 +430,7 @@
       <!-- OSCILLATORS -->
       <h2 id="oscillators">3 · Oscillators & momentum</h2>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Relative Strength Index — RSI</h3>
         <div class="math">\[
           RSI = 100 - \frac{100}{1 + RS},\quad RS = \frac{Average\ Gain}{Average\ Loss}
@@ -311,7 +438,7 @@
         <div class="desc">Momentum oscillator (0–100); typical thresholds: 70/30.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>MACD (Moving Average Convergence Divergence)</h3>
         <div class="math">\[
           MACD = EMA_{12} - EMA_{26},\qquad Signal = EMA(MACD,9)
@@ -319,7 +446,7 @@
         <div class="desc">Trend-following momentum indicator; histogram = MACD − Signal.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Stochastic Oscillator (%K / %D)</h3>
         <div class="math">\[
           \%K = \frac{C - L_n}{H_n - L_n}\times 100,\quad \%D = SMA(\%K, 3)
@@ -327,7 +454,7 @@
         <div class="desc">Momentum relative to recent high-low range; thresholds ~80/20.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Williams %R</h3>
         <div class="math">\[
           \%R = \frac{H_n - C_t}{H_n - L_n}\times -100
@@ -335,7 +462,7 @@
         <div class="desc">Like stochastic but inverted scale (−100 to 0).</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Rate of Change — ROC & Momentum</h3>
         <div class="math">\[
           ROC = \frac{P_t - P_{t-n}}{P_{t-n}}\times 100,\quad Momentum = P_t - P_{t-n}
@@ -343,7 +470,7 @@
         <div class="desc">Measures speed and absolute change over <code>n</code> periods.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>TRIX (Triple Exponential Oscillator)</h3>
         <div class="math">\[
           TRIX = \frac{EMA_{3x}(close) - EMA_{3x}(close)_{prev}}{EMA_{3x}(close)_{prev}}\times 100
@@ -351,7 +478,7 @@
         <div class="desc">Percentage rate-of-change of triple-smoothed EMA; filters noise.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Commodity Channel Index — CCI</h3>
         <div class="math">\[
           CCI = \frac{TP - SMA(TP)}{0.015 \times MD},\quad TP=\frac{H+L+C}{3}
@@ -359,7 +486,7 @@
         <div class="desc">Measures variation from typical price (TP).</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Money Flow Index — MFI</h3>
         <div class="math">\[
           MFI = 100 - \frac{100}{1 + MR},\quad MR = \frac{Positive\ Money\ Flow}{Negative\ Money\ Flow}
@@ -367,8 +494,7 @@
         <div class="desc">Volume-weighted RSI-like oscillator (0–100).</div>
       </div>
 
-      <!-- Added extras -->
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>True Strength Index — TSI</h3>
         <div class="math">\[
           TSI = 100 \times \frac{EMA(EMA(\Delta P, r), s)}{EMA(EMA(|\Delta P|, r), s)}
@@ -383,7 +509,7 @@
       <!-- VOLUME & VWAP -->
       <h2 id="volume">4 · Volume & weighted measures</h2>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>On-Balance Volume — OBV</h3>
         <div class="math">\[
           OBV_t = OBV_{t-1} + \begin{cases} V_t & C_t > C_{t-1} \\ -V_t & C_t < C_{t-1} \\ 0 & \text{else} \end{cases}
@@ -391,7 +517,7 @@
         <div class="desc">Cumulative volume flow indicator (trend confirmation).</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Volume Weighted Average Price — VWAP</h3>
         <div class="math">\[
           VWAP_t = \frac{\sum_{i=1}^t P_i V_i}{\sum_{i=1}^t V_i}
@@ -399,7 +525,7 @@
         <div class="desc">Intraday volume-weighted price (useful for execution benchmarks).</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Chaikin Money Flow — CMF</h3>
         <div class="math">\[
           CMF = \frac{\sum_{i=1}^n (CLV_i \cdot V_i)}{\sum_{i=1}^n V_i},\quad CLV=\frac{(C-L)-(H-C)}{H-L}
@@ -407,8 +533,7 @@
         <div class="desc">Measures money flow over a period using close location value (CLV).</div>
       </div>
 
-      <!-- Added from todo -->
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Accumulation/Distribution Line — ADL</h3>
         <div class="math">\[
           ADL_t = ADL_{t-1} + \frac{(C_t - L_t) - (H_t - C_t)}{H_t - L_t} \times V_t
@@ -423,7 +548,7 @@
       <!-- VOLATILITY & RISK -->
       <h2 id="volatility">5 · Volatility & risk</h2>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Bollinger Bands</h3>
         <div class="math">\[
           Middle = SMA(n),\quad Upper = SMA(n)+k\sigma,\quad Lower = SMA(n)-k\sigma
@@ -431,7 +556,7 @@
         <div class="desc">Volatility envelope based on standard deviation <code>σ</code>.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Average True Range — ATR</h3>
         <div class="math">\[
           TR=\max(H-L,\ |H-C_{prev}|,\ |L-C_{prev}|),\quad ATR=EMA(TR,n)
@@ -439,7 +564,7 @@
         <div class="desc">Average of true range — measures volatility in price movement.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Log Returns & Variance</h3>
         <div class="math">\[
           r_t=\ln\frac{P_t}{P_{t-1}},\quad Var(r)=E[(r-\bar r)^2]
@@ -447,7 +572,7 @@
         <div class="desc">Log returns additive over time; variance measures dispersion.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Sharpe Ratio</h3>
         <div class="math">\[
           Sharpe=\frac{R_p - R_f}{\sigma_p}
@@ -455,8 +580,7 @@
         <div class="desc">Risk-adjusted return vs risk-free rate.</div>
       </div>
 
-      <!-- Added risk metrics -->
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Sortino Ratio</h3>
         <div class="math">\[
           Sortino=\frac{R_p - R_f}{\sigma_{down}}
@@ -464,7 +588,7 @@
         <div class="desc">Risk-adjusted return focusing only on downside volatility (penalizes negative returns more).</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Value at Risk — VaR (Parametric)</h3>
         <div class="math">\[
           VaR_{p,\alpha} = \mu_p + z_\alpha \sigma_p
@@ -479,7 +603,7 @@
       <!-- STOCHASTIC / BROWNIAN / MONTE CARLO -->
       <h2 id="stochastic">6 · Stochastic models & Monte Carlo</h2>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Geometric Brownian Motion (GBM)</h3>
         <div class="math">\[
           dS_t = \mu S_t dt + \sigma S_t dW_t \quad\Rightarrow\quad S_t=S_0\exp\Big((\mu-\tfrac{1}{2}\sigma^2)t+\sigma W_t\Big)
@@ -487,7 +611,7 @@
         <div class="desc">Model for continuous-time stock price evolution; basis for Monte Carlo simulation.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Discrete-time Random Walk</h3>
         <div class="math">\[
           S_{t+1} = S_t + \mu \Delta t + \sigma \sqrt{\Delta t}\ \epsilon_t,\quad \epsilon_t\sim N(0,1)
@@ -495,7 +619,7 @@
         <div class="desc">Euler discretization useful for simulation and scenario generation.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Monte Carlo — Basic Price Simulation</h3>
         <div class="math">\[
           \hat{S}_{T}^{(i)} = S_0\exp\Big((\mu-\tfrac{1}{2}\sigma^2)T + \sigma \sqrt{T} Z^{(i)}\Big),\quad Z^{(i)}\sim N(0,1)
@@ -503,7 +627,7 @@
         <div class="desc">Simulate many paths and compute statistics (mean, quantiles, VaR).</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Monte Carlo — Portfolio VaR (Basic)</h3>
         <div class="math">\[
           \text{Simulate portfolio value }V_T^{(i)}\text{ across paths and estimate }VaR_\alpha = \text{quantile}_\alpha(\Delta V^{(i)})
@@ -518,7 +642,7 @@
       <!-- REGRESSION AND RELATIONSHIP -->
       <h2 id="regression">7 · Regression & correlation</h2>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Linear regression / slope</h3>
         <div class="math">\[
           \beta_{OLS} = \frac{\sum (x_i-\bar x)(y_i-\bar y)}{\sum (x_i-\bar x)^2}
@@ -526,7 +650,7 @@
         <div class="desc">Slope of best-fit line (used in trend/regression channels).</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Beta & Alpha (CAPM)</h3>
         <div class="math">\[
           \beta=\frac{Cov(R_i,R_m)}{Var(R_m)},\qquad \alpha=R_i - [R_f + \beta(R_m-R_f)]
@@ -534,7 +658,7 @@
         <div class="desc">Market sensitivity and excess return vs benchmark.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Coefficient of determination — R²</h3>
         <div class="math">\[
           R^2 = 1 - \frac{SS_{res}}{SS_{tot}}
@@ -542,7 +666,7 @@
         <div class="desc">Fraction of variance explained by regression model.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Covariance & Correlation</h3>
         <div class="math">\[
           Cov(X,Y)=E[(X-\bar X)(Y-\bar Y)],\quad Corr(X,Y)=\frac{Cov(X,Y)}{\sigma_X\sigma_Y}
@@ -557,7 +681,7 @@
       <!-- NEW SECTION: Trend & Directional -->
       <h2 id="trend">8 · Trend & directional indicators</h2>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Average Directional Index — ADX</h3>
         <div class="math">\[
           DX = \frac{|+DI - -DI|}{|+DI + -DI|}\times 100,\quad ADX = SMA(DX, n)
@@ -565,7 +689,7 @@
         <div class="desc">Measures trend strength by comparing positive and negative directional movement.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Parabolic SAR</h3>
         <div class="math">\[
           SAR_{t+1} = SAR_t + AF \times (EP - SAR_t)
@@ -573,7 +697,7 @@
         <div class="desc">Trailing stop-based indicator that flips when price reverses; uses acceleration factor <code>AF</code> and extreme point <code>EP</code>.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Ichimoku Cloud (key lines)</h3>
         <div class="math">\[
           Tenkan = \frac{H_9 + L_9}{2},\quad Kijun = \frac{H_{26}+L_{26}}{2},\quad SenkouA=\frac{Tenkan+Kijun}{2}
@@ -581,7 +705,7 @@
         <div class="desc">Multi-line system (Tenkan, Kijun, Senkou spans) that indicates support/resistance and trend direction.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Donchian Channel</h3>
         <div class="math">\[
           Upper = \max(H_{t-n+1..t}),\quad Lower = \min(L_{t-n+1..t})
@@ -596,7 +720,7 @@
       <!-- Volatility extensions -->
       <h2 id="vol_ext">9 · Volatility & range systems</h2>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Keltner Channel</h3>
         <div class="math">\[
           Middle = EMA(n),\quad Upper = Middle + k \times ATR(n),\quad Lower = Middle - k \times ATR(n)
@@ -604,7 +728,7 @@
         <div class="desc">ATR-based volatility envelope around an EMA — smoother alternative to Bollinger Bands.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>SuperTrend</h3>
         <div class="math">\[
           BasicBand = \frac{H+L}{2} \pm Multiplier \times ATR,\quad SuperTrend \text{ flips based on price crossing bands}
@@ -612,7 +736,7 @@
         <div class="desc">Trend-following indicator built from ATR and directional price breaks — useful for stop placement.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Donchian / Channel (already present) — note</h3>
         <div class="desc">Included under Trend section; useful for breakout/volatility strategies.</div>
       </div>
@@ -624,7 +748,7 @@
       <!-- Volume extensions -->
       <h2 id="volume_ext">10 · Volume & flow systems</h2>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Volume Weighted MA (VWMA) — note</h3>
         <div class="math">\[
           VWMA_t = \frac{\sum_{i=1}^n P_i V_i}{\sum_{i=1}^n V_i}
@@ -632,13 +756,12 @@
         <div class="desc">Already listed in Moving Averages as VMA/VWMA; highlighted here for volume-focused workflows.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Chaikin / ADL / OBV — note</h3>
         <div class="desc">ADL, CMF, and OBV are already documented in Volume section; useful to compare them together for money flow analysis.</div>
       </div>
 
-      <!-- Additional volume tools -->
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>On-Balance Volume (reminder)</h3>
         <div class="desc">See Volume section — used for simple directional volume confirmation.</div>
       </div>
@@ -650,7 +773,7 @@
       <!-- Statistical & risk metrics -->
       <h2 id="stats">11 · Statistical & risk metrics</h2>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Z-Score (Normalization)</h3>
         <div class="math">\[
           Z_t = \frac{X_t - \mu}{\sigma}
@@ -658,7 +781,7 @@
         <div class="desc">Standard score — useful for comparing indicators across scales.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Rolling Correlation</h3>
         <div class="math">\[
           \rho_{t}(x,y) = Corr(x_{t-n+1..t}, y_{t-n+1..t})
@@ -666,7 +789,7 @@
         <div class="desc">Time-varying correlation between two series over a rolling window.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Autocorrelation (lag k)</h3>
         <div class="math">\[
           \rho_k = \frac{E[(X_t-\bar X)(X_{t-k}-\bar X)]}{Var(X)}
@@ -674,7 +797,7 @@
         <div class="desc">Measure of persistence / serial correlation in a time series.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Maximum Drawdown</h3>
         <div class="math">\[
           MDD = \max_t \left(1 - \frac{V_t}{\max_{s \le t} V_s}\right)
@@ -682,7 +805,7 @@
         <div class="desc">Worst peak-to-trough decline — standard downside risk metric.</div>
       </div>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Skewness & Kurtosis</h3>
         <div class="math">\[
           Skew = E\left[\left(\frac{X-\mu}{\sigma}\right)^3\right],\quad Kurt = E\left[\left(\frac{X-\mu}{\sigma}\right)^4\right]
@@ -697,7 +820,7 @@
       <!-- Forecast / ML / advanced -->
       <h2 id="ml">12 · Forecasting & advanced models</h2>
 
-      <div class="formula-box">
+      <div class="card formula-box">
         <h3>Kalman Filter — simple state estimate</h3>
         <div class="math">\[
           \hat{x}_{t|t} = \hat{x}_{t|t-1} + K_t (y_t - H \hat{x}_{t|t-1})
@@ -705,12 +828,13 @@
         <div class="desc">Recursive filter for denoising and adaptive smoothing — can be used as an adaptive moving average.</div>
       </div>
 
-     
-
       <hr class="sep">
 
       <p class="lead">— End of FLUX formula reference —</p>
     </div>
   </div>
+
+  <button class="back-top" onclick="window.scrollTo({top:0, behavior:'smooth'});">Back to top ↑</button>
+
 </body>
 </html>
