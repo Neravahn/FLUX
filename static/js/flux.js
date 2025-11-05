@@ -159,8 +159,8 @@ document.getElementById('resetZoom').addEventListener("click", () => {
 document.getElementById("toggleGrid").addEventListener("click", () => {
   gridVisible = !gridVisible;
   if (maChart) {
-    maChart.options.scales.x.grid.color = gridVisible ? "rgba(255,255,255,0.05)" : "transparent";
-    maChart.options.scales.y.grid.color = gridVisible ? "rgba(255,255,255,0.05)" : "transparent";
+    maChart.options.scales.x.grid.color = gridVisible ? "rgba(255,255,255,0.1)" : "transparent";
+    maChart.options.scales.y.grid.color = gridVisible ? "rgba(255,255,255,0.1)" : "transparent";
     maChart.update();
   }
 });
@@ -168,7 +168,7 @@ document.getElementById("toggleGrid").addEventListener("click", () => {
 document.getElementById("downloadChart").addEventListener("click", () => {
   const canvas = document.getElementById("engine-canvas");
   const link = document.createElement("a");
-  link.download = "chart.png";
+  link.download = "main_chart.png";
   link.href = canvas.toDataURL("image/png");
   link.click();
 });

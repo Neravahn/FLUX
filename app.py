@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, jsonify
 from packages.beta_alpha import calculate_beta_alpha
 from packages.quant_core import run_formula
+from packages.oscillators import oscillator_calculate
 
 
 
@@ -27,12 +28,7 @@ def engine():
         window = data['window']
 
         result = run_formula(ticker, interval, formula_1, formula_2, moving_average, window)
-        # print("RETURNING TO FRONTEND:", result)
-        print("Returned keys:", result.keys())
 
-
-
-        
         return jsonify(result)
 
     except Exception as e:
@@ -53,6 +49,30 @@ def alphabeta_engine():
     
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+
+@app.route('/oscillator_engine', methods = ['POST'])
+def oscillator_engine():
+    data = request.get_json()
+
+    try:
+        ticker = data['ticker_oscillator']
+        interval = data['interval_oscillator']
+        oscillator = data['select_oscillator']
+        #OPTIONAL TUNING PART
+        period = data['period']
+        fast = data['fast']
+        slow = data['slow']
+        signal= data['signal']
+
+        result = oscillator_calculate(ticker, interval, oscillator, period, fast, slow, signal)
+
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+
 
 
 @app.route('/documentation')

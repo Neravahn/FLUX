@@ -29,8 +29,6 @@ def run_formula(ticker, interval, formula_1, formula_2, moving_average, window):
     elif interval in ['1d', '1wk', '1mo', '3mo']:
         period = 'max'
 
-    if not interval:
-        period = '1d'
 
     
     data = yf.download(ticker, period = period, interval=interval)

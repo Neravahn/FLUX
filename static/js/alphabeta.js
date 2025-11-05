@@ -1,6 +1,6 @@
 const alphabetaform = document.getElementById('alphabeta-panel');
 let alphabetaChart;
-let gridVisible_2 = true; 
+let gridVisible_2 = true;
 
 document.getElementById('submit_alphabeta').addEventListener('click', async (e) => {
     e.preventDefault();
@@ -17,12 +17,12 @@ document.getElementById('submit_alphabeta').addEventListener('click', async (e) 
     try {
         const response = await fetch('/alphabeta_engine', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
         const data = await response.json();
-        const errorDiv = document.getElementById('engine-error');
+        const errorDiv = document.getElementById('engine-error_alphabeta');
 
         if (data.error) {
             errorDiv.textContent = data.error;
@@ -32,8 +32,11 @@ document.getElementById('submit_alphabeta').addEventListener('click', async (e) 
 
         }
 
-        if(alphabetaChart) alphabetaChart.destroy();
-        if(maChart) maChart.destroy();
+
+        // DESTROY PREVIOUS CHART BEFORE DEPLOYING NEW ONE
+        if (alphabetaChart) alphabetaChart.destroy();
+        if (maChart) maChart.destroy();
+        if (oscillatorChart) oscillatorChart.destroy();
 
         const ctx = document.getElementById('engine-canvas').getContext('2d');
         alphabetaChart = new Chart(ctx, {
@@ -49,7 +52,7 @@ document.getElementById('submit_alphabeta').addEventListener('click', async (e) 
 
                     },
                     {
-                    label: `Regression Line (B = ${data.beta.toFixed(2)}, a = ${data.alpha.toFixed(4)})`,
+                        label: `Regression Line (B = ${data.beta.toFixed(2)}, a = ${data.alpha.toFixed(4)})`,
                         data: data.regression_line,
                         borderColor: '#007aff',
                         backgroundColor: '#007aff',
@@ -62,30 +65,30 @@ document.getElementById('submit_alphabeta').addEventListener('click', async (e) 
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {display: true},
+                    legend: { display: true },
                     tooltip: {
                         backgroundColor: '#0f0f0f',
                         titleColor: '#fff',
                         bodyColor: '#ddd'
                     },
                     zoom: {
-                        pan: { enabled: true, mode: 'xy'},
+                        pan: { enabled: true, mode: 'xy' },
                         zoom: {
-                            wheel: { enabled:true},
-                            pinch: { enabled:true },
-                            drag: { enabled: true},
+                            wheel: { enabled: true },
+                            pinch: { enabled: true },
+                            drag: { enabled: true },
                             mode: 'xy'
                         }
                     }
                 },
-                scales : {
-                    x: { title: {display:true, text: 'Benchmark'}},
-                    y: { title : {display: true, text: 'Stock Returns'}}
+                scales: {
+                    x: { title: { display: true, text: 'Benchmark' } , grid: {color : 'rgba(255,255,255,0.1)'}},
+                    y: { title: { display: true, text: 'Stock Returns' }, grid: {color: 'rgba(255,255,255,0.1)'} }
                 }
             }
         });
     } catch (err) {
-        document.getElementById('engine-error').textContent = 'Something went wrong.';
+        document.getElementById('engine-error_alphabeta').textContent = 'Something went wrong.';
         console.error(err);
     }
 });
@@ -98,8 +101,14 @@ document.getElementById('resetZoom').addEventListener('click', () => {
 document.getElementById('toggleGrid').addEventListener('click', () => {
     gridVisible_2 = !gridVisible_2;
     if (alphabetaChart) {
-    alphabetaChart.options.scales.x.grid.color = gridVisible_2 ? 'rgba(255,255,255,0.05)' : 'transparent';
-    alphabetaChart.options.scales.y.grid.color = gridVisible_2 ? 'rgba(255,255,255,0.05)' : 'transparent';
-    alphabetaChart.update()
+        alphabetaChart.options.scales.x.grid.color = gridVisible_2 ? 'rgba(255,255,255,0.1)' : 'transparent';
+        alphabetaChart.options.scales.y.grid.color = gridVisible_2 ? 'rgba(255,255,255,0.1)' : 'transparent';
+        alphabetaChart.update()
     }
-})
+});
+document.getElementById('downloadChart').addEventListener('click', () => {
+    const canvas_ab = document.getElementById('engine-canvas');
+    const link_os = document.createElement('a');
+    link_os.download = 'alphabeta_chart.png';
+    link_os.click();
+});

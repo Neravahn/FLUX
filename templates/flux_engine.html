@@ -141,7 +141,88 @@
         </div>
 
         <button type="button" id="submit_alphabeta">ANALYZE</button>
-        <div id="engine-error"></div>
+        <div id="engine-error_alphabeta"></div>
+      </form>
+
+
+
+
+      <!--=======NOW ADDING OSCILLATORS===========-->
+      <form id="oscillator-panel">
+        <h2>OSCILLATORS & MOMENTUM</h2>
+
+        <div class="form-group">
+          <label for="ticker_oscillator">Select Stock</label>
+          <select id="ticker_oscillator" name="ticker_oscillator" required>
+            <option value="AAPL">Apple (AAPL)</option>
+            <option value="GOOGL">Alphabet (GOOGL)</option>
+            <option value="MSFT">Microsoft (MSFT)</option>
+            <option value="TSLA">Tesla (TSLA)</option>
+            <option value="AMZN">Amazon (AMZN)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="interval_oscillator">Select Interval</label>
+          <select id="interval_oscillator" name="interval_oscillator" required>
+            <option value="">Select interval</option>
+            <option value="1d">1 day</option>
+            <option value="1h">1 hour</option>
+            <option value="15m">15 minutes</option>
+            <option value="5m">5 minutes</option>
+            <option value="2m">2 minutes</option>
+            <option value="1m">1 minute</option>
+            <option value="1wk">1 week</option>
+            <option value="1mo">1 month</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="select_oscilaltor">Select Oscillator</label>
+          <select id="select_oscillator" name="select_oscillator" required>
+            <option value="">Select Oscillator</option>
+            <option value="rsi">Relative Strength Index</option>
+            <option value="macd">Moving Average Convergence Divergence</option>
+            <option value="stochastic">Stochastic Oscillator</option>
+            <option value="william_r">William %R</option>
+            <option value="roc">Rate of Change</option>
+            <option value="trix">Triple Exponential Oscillator</option>
+            <option value="cci">Commodity Channel Index</option>
+            <option value="mfi">Money Flow Index</option>
+            <option value="tsi">True Strength Index</option>
+          </select>
+        </div>
+
+        <h4>OPTIONAL TUNING</h4>
+        <div class="form-group">
+          <label for="period_oscillator">Period</label>
+          <input type="number" id="period_oscillator" name="period_oscillator">
+        </div>
+
+        <div class="form-group">
+          <label for="fast_oscillator">Fast</label>
+          <input type="number" id="fast_oscillator" name="fast_oscillator">
+        </div>
+
+        <div class="form-group">
+          <label for="slow_oscillator">Slow</label>
+          <input type="number" id="slow_oscillator" name="slow_oscillator">
+        </div>
+
+        <div class="form-group">
+          <label for="signal_oscillator">Signal</label>
+          <input type="number" id="signal_oscillator" name="signal_oscillator">
+        </div>
+
+        <button type="button" id="submit_oscillator">ANALYZE</button>
+        <div id="engine-error_oscillator"></div>
+
+
+
+
+
+
+
       </form>
     </div>
   </div>
@@ -151,6 +232,7 @@
   <!-- LINK EXTERNAL JAVASCCRIPTS-->
   <script src="{{ url_for('static', filename='js/flux.js') }}"></script>
   <script src="{{ url_for('static', filename='js/alphabeta.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/oscillators.js') }}"></script>
 </body>
 
 </html>
