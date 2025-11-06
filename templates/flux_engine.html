@@ -217,10 +217,57 @@
         <button type="button" id="submit_oscillator">ANALYZE</button>
         <div id="engine-error_oscillator"></div>
 
+      </form>
 
 
 
+      <!--===============VOLUME AND WEIGHTED MEASURES==============-->
+      <form id="vwm-panel">
+        <h2>VOLUME & WEIGHTED MEASURES</h2>
 
+        <div class="form-group">
+          <label for="ticker_vwm">Select Stock</label>
+          <select id="ticker_vwm" name="ticker_vwm" required>
+            <option value="AAPL">Apple (AAPL)</option>
+            <option value="GOOGL">Alphabet (GOOGL)</option>
+            <option value="MSFT">Microsoft (MSFT)</option>
+            <option value="TSLA">Tesla (TSLA)</option>
+            <option value="AMZN">Amazon (AMZN)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="interval_vwm">Select Interval</label>
+          <select id="interval_vwm" name="interval_vwm" required>
+            <option value="">Select interval</option>
+            <option value="1d">1 day</option>
+            <option value="1h">1 hour</option>
+            <option value="15m">15 minutes</option>
+            <option value="5m">5 minutes</option>
+            <option value="2m">2 minutes</option>
+            <option value="1m">1 minute</option>
+            <option value="1wk">1 week</option>
+            <option value="1mo">1 month</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="vwm">Select VWMs</label>
+          <select id="vwm" name="vwm" required>
+            <option value="">Select VWMs</option>
+            <option value="obv">On-Balance Value</option>
+            <option value="vwap">Volume Weighted Average Price</option>
+            <option value="cmf">Chaikin Money Flow</option>
+            <option value="adl">Accumulation / Distibution Line</option>
+
+          </select>
+        </div>
+         <div class="form-group">
+          <label for="period_vwm">Signal</label>
+          <input type="number" id="perid_vwm" name="period_vwm">
+        </div>
+        <button type="button" id="submit_vwm">ANALYZE</button>
+        <div id="engine-error_vwm"></div>
 
 
       </form>
@@ -233,6 +280,7 @@
   <script src="{{ url_for('static', filename='js/flux.js') }}"></script>
   <script src="{{ url_for('static', filename='js/alphabeta.js') }}"></script>
   <script src="{{ url_for('static', filename='js/oscillators.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/vwm.js')}}"></script>
 </body>
 
 </html>

@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, request, jsonify
 from packages.beta_alpha import calculate_beta_alpha
 from packages.quant_core import run_formula
 from packages.oscillators import oscillator_calculate
+from packages.vwm import calculate_vwm
 
 
 
@@ -71,6 +72,27 @@ def oscillator_engine():
     
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+
+
+@app.route('/vwm_engine', methods = ['POST'])
+def wm_engine():
+    data = request.get_json()
+
+    try:
+        ticker = data['ticker']
+        interval = data['interval']
+        vwm = data['vwm']
+        period_ma = data['period']
+
+        result = calculate_vwm(ticker, interval, vwm, period_ma)
+
+        return jsonify(result)
+    
+    
+    
+    except Exception as e:
+        return jsonify({'error' : str(e)})
 
 
 

@@ -146,7 +146,8 @@
 
  #submit_formula,
  #submit_alphabeta,
- #submit_oscillator {
+ #submit_oscillator,
+ #submit_vwm {
    width: 100%;
    padding: 12px;
    background-color: transparent;
@@ -162,7 +163,8 @@
 
  #submit_formula:hover,
  #submit_alphabeta:hover,
- #submit_oscillator:hover {
+ #submit_oscillator:hover,
+ #sybmit_vwm:hover {
    background-color: #f1f1f1;
    color: black;
  }

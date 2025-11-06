@@ -3,7 +3,7 @@ import numpy as np
 import yfinance as yf
 
 
-def calculate_vmw(ticker, interval, vwm, period_ma):
+def calculate_vwm(ticker, interval, vwm, period_ma):
 
     if interval in ['1m', '2m', '5m', '15m', '30m']:
         period = '7d'
@@ -23,7 +23,7 @@ def calculate_vmw(ticker, interval, vwm, period_ma):
 
     #==========================================================
 
-    # ALL VMWS
+    # ALL VMWS WHERE NO VWM_MA RETURN NP.NAN
 
     if vwm == 'obv':
         obv = [0]
@@ -42,26 +42,36 @@ def calculate_vmw(ticker, interval, vwm, period_ma):
         if not period_ma:
             period_ma = 20
 
-        data['vwm_ma'] = data['obv'].rolling(period_ma).mean()
+        data['vwm_ma'] = data['vwm'].rolling(period_ma).mean()
         
 
     elif vwm == 'vwap':
+        epsilon = 1e-9
         typical_price = (data['high'] + data['low'] + data['close'])/3
-        data['vwm'] = (typical_price * data['volume']).cumsum() / data['volume']
+        data['vwm'] = (typical_price * data['volume']).cumsum() / (data['volume'].cumsum() + epsilon)
+        data['vwm_ma'] = np.nan
 
 
     elif vwm == 'cmf':
+        epsilon = 1e-9
         if not period_ma:
             period_ma = 20
 
+        else:
+            if period_ma > len(data):
+                period_ma = len(data)
+
         mf_multiplier = ((data['close'] - data['low']) - (data['high'] - data['close'])) / (data['high'] - data['low'])
         mf_volume = mf_multiplier* data['volume']
-        data['vwm'] = mf_volume.rolling(period_ma).sum() / data['volume'].rolling(period_ma).sum()
+        data['vwm'] = mf_volume.rolling(period_ma).sum() / (data['volume'].rolling(period_ma).sum() + epsilon)
+        data['vwm_ma'] = np.nan
 
     elif vwm == 'adl':
-        mf_multiplier = ((data['close'] - data['low']) - (data['high'] - data['close'])) / (data['high'] - data['low'])
+        epsilon = 1e-9
+        mf_multiplier = ((data['close'] - data['low']) - (data['high'] - data['close'])) / ((data['high'] - data['low']) + epsilon)
         mf_volume = mf_multiplier * data['volume']
         data['vwm'] = mf_volume.cumsum()
+        data['vwm_ma'] = np.nan
 
 
 
@@ -71,6 +81,7 @@ def calculate_vmw(ticker, interval, vwm, period_ma):
     if 'vwm_ma' not in data:
         data['vwm_ma'] = np.nan
     
+    data.replace([np.inf, -np.inf], np.nan, inplace=True)
 
     return {
         'labels': days,
@@ -86,9 +97,6 @@ def calculate_vmw(ticker, interval, vwm, period_ma):
 
     
 
-
-
-    
 
 
 

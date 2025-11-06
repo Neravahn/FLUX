@@ -7,12 +7,12 @@ document.getElementById('submit_formula').addEventListener('click', async (e) =>
 
 
   const payload = {
-    ticker: form.ticker.value || '',
-    interval: form.interval.value || '',
-    moving_average: form.moving_average.value || '',
-    formula_1: form.formula_1.value || '',
-    formula_2: form.formula_2.value || '',
-    window: form.window.value || null
+    ticker: form.ticker.value,
+    interval: form.interval.value,
+    moving_average: form.moving_average.value,
+    formula_1: form.formula_1.value,
+    formula_2: form.formula_2.value,
+    window: form.window.value
   };
 
   try {
@@ -33,9 +33,9 @@ document.getElementById('submit_formula').addEventListener('click', async (e) =>
     }
 
     if (maChart) maChart.destroy();
-    if (typeof alphabetaChart !== 'undefined' && alphabetaChart) {
-      alphabetaChart.destroy();
-    }
+    if (alphabetaChart) alphabetaChart.destroy();
+    if (OscillatorChart) oscillatorChart.destroy();
+    if (vwmChart) vwmChart.destroy()
 
     const ctx = document.getElementById('engine-canvas').getContext('2d');
     maChart = new Chart(ctx, {
@@ -151,7 +151,7 @@ document.getElementById('submit_formula').addEventListener('click', async (e) =>
   }
 });
 
-// === Button Actions ===
+// === BUTTON ACTIONS  ===
 document.getElementById('resetZoom').addEventListener("click", () => {
   if (maChart) maChart.resetZoom();
 });
