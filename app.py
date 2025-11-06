@@ -1,8 +1,8 @@
 from flask import Flask, render_template, url_for, request, jsonify
-from packages.beta_alpha import calculate_beta_alpha
-from packages.quant_core import run_formula
-from packages.oscillators import oscillator_calculate
-from packages.vwm import calculate_vwm
+from modules.beta_alpha import calculate_beta_alpha
+from modules.quant_core import run_formula
+from modules.oscillators import oscillator_calculate
+from modules.vwm import calculate_vwm
 
 
 
