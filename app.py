@@ -3,7 +3,8 @@ from modules.beta_alpha import calculate_beta_alpha
 from modules.quant_core import run_formula
 from modules.oscillators import oscillator_calculate
 from modules.vwm import calculate_vwm
-
+from modules.vnr import calculate_vnr
+from modules.gbm import calculate_gbm
 
 
 app = Flask(__name__)
@@ -15,6 +16,7 @@ def index():
 @app.route('/flux_engine')
 def flux_engine():
     return render_template('flux_engine.html')
+
 
 @app.route('/engine', methods=['POST'])
 def engine():
@@ -93,22 +95,63 @@ def wm_engine():
     
     except Exception as e:
         return jsonify({'error' : str(e)})
+    
+
+@app.route('/vnr_engine', methods = ['POST'])
+def vnr_engine():
+    data = request.get_json()
+    try:
+        ticker = data['ticker']
+        interval= data['interval']
+        period_ma = data['window']
+        vnr = data['vnr']
+        confidence = data['confidence']
+        risk_free = data['risk_free']
+
+        result = calculate_vnr(ticker, vnr, interval, period_ma, confidence, risk_free )
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+
+
+@app.route('/gbm_engine', methods = ['POST'])
+def gbm_engine():
+    data= request.get_json()
+
+    try:
+        ticker = data['ticker']
+        interval = data['interval']
+        nos_gbm = data['nos_gbm']
+        th_gbm = data['th_gbm']
+        
+        result = calculate_gbm(ticker, interval, th_gbm, nos_gbm)
+
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 
 
+
+
+
+
+#============================================
+#              PREDICTION MODELS
+#============================================
+
+@app.route('/predictionmodels')
+def predictionmodels():
+    return render_template('predictionmodels.html')
 
 @app.route('/documentation')
 def documentation():
     return render_template('documentation.html')
 
     
-
-
-
-
-  
-
-
 if __name__ == '__main__':
     app.run(debug=True)
 

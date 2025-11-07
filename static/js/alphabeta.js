@@ -37,6 +37,8 @@ document.getElementById('submit_alphabeta').addEventListener('click', async (e) 
         if (alphabetaChart) alphabetaChart.destroy();
         if (maChart) maChart.destroy();
         if (oscillatorChart) oscillatorChart.destroy();
+        if (vnrChart) vnrChart.destory();
+        if (vwmChart) vwmChart.destory();
 
         const ctx = document.getElementById('engine-canvas').getContext('2d');
         alphabetaChart = new Chart(ctx, {

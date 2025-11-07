@@ -4,6 +4,8 @@ import yfinance as yf
 
 
 def calculate_vwm(ticker, interval, vwm, period_ma):
+    if period_ma:
+        period_ma = int(period_ma)
 
     if interval in ['1m', '2m', '5m', '15m', '30m']:
         period = '7d'
@@ -14,16 +16,16 @@ def calculate_vwm(ticker, interval, vwm, period_ma):
     if interval in ['1d', '1wk', '1mo', '3mo']:
         period = 'max'
 
-    #==================ADD DATA FETCHING HERE==================
+
 
     data = yf.download(ticker, period=period, interval=interval)
     if isinstance(data.columns, pd.MultiIndex):
         data.columns = data.columns.get_level_values(0)
     data.columns = [col.lower() for col in data.columns]
 
-    #==========================================================
 
-    # ALL VMWS WHERE NO VWM_MA RETURN NP.NAN
+
+    # ALL VMWS WHERE NO VWM_MA RETURN NP.NAN I GUESS IT WILL MAKE IT MORE UNIFORM
 
     if vwm == 'obv':
         obv = [0]

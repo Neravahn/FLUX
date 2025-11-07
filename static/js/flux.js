@@ -34,8 +34,9 @@ document.getElementById('submit_formula').addEventListener('click', async (e) =>
 
     if (maChart) maChart.destroy();
     if (alphabetaChart) alphabetaChart.destroy();
-    if (OscillatorChart) oscillatorChart.destroy();
-    if (vwmChart) vwmChart.destroy()
+    if (oscillatorChart) oscillatorChart.destroy();
+    if (vwmChart) vwmChart.destroy();
+    if (vnrChart) vnrChart.destory();
 
     const ctx = document.getElementById('engine-canvas').getContext('2d');
     maChart = new Chart(ctx, {

@@ -39,7 +39,7 @@
    justify-content: center;
  }
 
- #engine-canvas {
+ #forecast-canvas {
    width: 100%;
    height: 100%;
    display: block;
@@ -127,7 +127,6 @@
  }
 
  select,
- textarea,
  input[type='number'] {
    width: 100%;
    padding: 8px;
@@ -138,16 +137,8 @@
    font-family: inherit;
  }
 
- textarea {
-   height: 80px;
-   resize: vertical;
- }
 
- #submit_formula,
- #submit_alphabeta,
- #submit_oscillator,
- #submit_vwm,
- #submit_vnr {
+ #submit_gbm {
    width: 100%;
    padding: 12px;
    background-color: transparent;
@@ -161,16 +152,12 @@
  }
 
 
- #submit_formula:hover,
- #submit_alphabeta:hover,
- #submit_oscillator:hover,
- #submit_vwm:hover,
- #submit_vnr:hover {
+ #submit_gbm:hover {
    background-color: #f1f1f1;
    color: black;
  }
 
- #engine-error {
+ #forecast-error {
    color: #ff4444;
    margin-top: 10px;
    font-size: 14px;

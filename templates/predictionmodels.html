@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+     <!-- Chart.js + Zoom Plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
+
+  <!--LINK CSS-->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/forecast.css') }}">
+</head>
+</head>
+
+<body>
+    <div id="main-container">
+        <div id="chart-section">
+            <canvas id="forecast-canvas"></canvas>
+            <div id="chart-controls">
+                <button id="resetZoom">RESET ZOOM</button>
+                <button id="downloadChart">DOWNLOAD CHART</button>
+                <button id="toggleGrid">TOGGLE GRID</button>
+            </div>
+        </div>
+        <!--===FORM CONTAINER===========-->
+        <div id="form-container">
+            <!--========GEOMETRIC BROWNIAN MOTION===============-->
+            <form id="gbm-panel">
+                <h2>GEOMETRIC BROWNIAN MOTION (GBM)</h2>
+
+                <div class="form-group">
+                    <label for="ticker_gbm">Select Stock</label>
+                    <select id="ticker_gbm" name="ticker_gbm" required>
+                        <option value="">Select a stock...</option>
+                        <option value="AAPL">Apple (AAPL)</option>
+                        <option value="GOOGL">Alphabet (GOOGL)</option>
+                        <option value="MSFT">Microsoft (MSFT)</option>
+                        <option value="TSLA">Tesla (TSLA)</option>
+                        <option value="AMZN">Amazon (AMZN)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="interval_gbm">Select Interval</label>
+                    <select id="interval_gbm" name="interval_gbm" required>
+                        <option value="">Select interval</option>
+                        <option value="1d">1 day </option>
+                        <option value="1h">1 hour</option>
+                        <option value="15m">15 minutes</option>
+                        <option value="5m">5 minutes</option>
+                        <option value="2m">2 minutes</option>
+                        <option value="1m">1 minute</option>
+                        <option value="1wk">1 week</option>
+                        <option value="1mo">1 month</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="th_gbm">Enter Time Horizon ( Days )</label>
+                    <input type="number" id="th_gbm" name="th_gbm" placeholder="Default">
+                </div>
+
+                <div class="form-group">
+                    <label for="nos_gbm">Enter Number of Stimulations</label>
+                    <input type="number" id="nos_gbm" name="nos_gbm" placeholder="Default">
+                </div>
+
+
+                <button type="submit" id="submit_gbm">ANALYZE</button>
+                <div id="forecast-error_gbm"></div>
+
+            </form>
+
+        </div>
+    </div>
+
+<!--=======EXTERNAL JS-===============-->
+<script src="{{ url_for('static', filename='js/gbm.js')}}"></script>
+</body>
+
+</html>

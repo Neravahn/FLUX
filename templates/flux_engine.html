@@ -196,22 +196,22 @@
         <h4>OPTIONAL TUNING</h4>
         <div class="form-group">
           <label for="period_oscillator">Period</label>
-          <input type="number" id="period_oscillator" name="period_oscillator">
+          <input type="number" id="period_oscillator" name="period_oscillator" placeholder="Default">
         </div>
 
         <div class="form-group">
           <label for="fast_oscillator">Fast</label>
-          <input type="number" id="fast_oscillator" name="fast_oscillator">
+          <input type="number" id="fast_oscillator" name="fast_oscillator" placeholder="Default">
         </div>
 
         <div class="form-group">
           <label for="slow_oscillator">Slow</label>
-          <input type="number" id="slow_oscillator" name="slow_oscillator">
+          <input type="number" id="slow_oscillator" name="slow_oscillator" placeholder="Default">
         </div>
 
         <div class="form-group">
           <label for="signal_oscillator">Signal</label>
-          <input type="number" id="signal_oscillator" name="signal_oscillator">
+          <input type="number" id="signal_oscillator" name="signal_oscillator" placeholder="Default">
         </div>
 
         <button type="button" id="submit_oscillator">ANALYZE</button>
@@ -262,17 +262,92 @@
 
           </select>
         </div>
-         <div class="form-group">
-          <label for="period_vwm">Signal</label>
-          <input type="number" id="perid_vwm" name="period_vwm">
+        <div class="form-group">
+          <label for="period_vwm">Rolling Window</label>
+          <input type="number" id="perid_vwm" name="period_vwm" placeholder="Default">
         </div>
         <button type="button" id="submit_vwm">ANALYZE</button>
         <div id="engine-error_vwm"></div>
+      </form>
 
+
+
+      <!--================VALUE AND RISK==============-->
+
+      <form id="vnr-panel">
+        <h2>VOLATILITY & RISK</h2>
+
+        <div class="form-group">
+          <label for="ticker_vnr">Select Stock</label>
+          <select id="ticker_vnr" name="ticker_vnr" required>
+            <option value="AAPL">Apple (AAPL)</option>
+            <option value="GOOGL">Alphabet (GOOGL)</option>
+            <option value="MSFT">Microsoft (MSFT)</option>
+            <option value="TSLA">Tesla (TSLA)</option>
+            <option value="AMZN">Amazon (AMZN)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="interval_vnr">Select Interval</label>
+          <select id="interval_vnr" name="interval_vnr" required>
+            <option value="">Select interval</option>
+            <option value="1d">1 day</option>
+            <option value="1h">1 hour</option>
+            <option value="15m">15 minutes</option>
+            <option value="5m">5 minutes</option>
+            <option value="2m">2 minutes</option>
+            <option value="1m">1 minute</option>
+            <option value="1wk">1 week</option>
+            <option value="1mo">1 month</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="vnr">Select VNR</label>
+          <select id="vnr" name="vnr" required>
+            <option value="">Select VNR</option>
+            <option value="bollinger">Bollinger Bands</option>
+            <option value="atr">Average True Range</option>
+            <option value="variance">Log Return and Variance</option>
+            <option value="sharpe">Sharpe Ratio</option>
+            <option value="sortino">Sortino Ratio</option>
+            <option value="var">Value at Risk</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="window_vnr">Select Window (Optional)</label>
+          <input id="window_vnr" type="number" name="window_vnr" placeholder="Default">
+        </div>
+
+
+        <div class="form-group">
+          <label for="confidence">Confidence (Optional)</label>
+          <input id="confidence" type="number" name="confidence" placeholder="Default">
+        </div>
+
+        <div class="form-group">
+          <label for="risk_free">Risk Free (Optional)</label>
+          <input id="risk_free" type="number" name="risk_free" placeholder="Defaulr">
+          </div>
+
+          <button type="button" id="submit_vnr">ANALYZE</button>
+          <div id="engine-error_vnr"></div>
 
       </form>
+
     </div>
+
   </div>
+  </div>
+
+
+
+
+
+
+
 
 
 
@@ -281,6 +356,7 @@
   <script src="{{ url_for('static', filename='js/alphabeta.js') }}"></script>
   <script src="{{ url_for('static', filename='js/oscillators.js') }}"></script>
   <script src="{{ url_for('static', filename='js/vwm.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/vnr.js')}}"></script>
 </body>
 
 </html>

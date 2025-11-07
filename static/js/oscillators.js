@@ -42,24 +42,18 @@ document.getElementById('submit_oscillator').addEventListener('click', async (e)
         if (oscillatorChart) oscillatorChart.destroy();
         if (maChart) maChart.destroy();
         if (alphabetaChart) alphabetaChart.destroy();
+        if (vnrChart) vnrChart.destroy();
+        if (vwmChart) vwmChart.destroy();
 
         const ctx = document.getElementById('engine-canvas').getContext('2d');
         oscillatorChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: data.labels,
+                
                 datasets: [
 
-                    //OSCILLATORS AND CLOSING PRICE PLOT
-                    {
-                        label: 'Closing Price',
-                        data: data.close,
-                        borderColor: '#ffd60a',
-                        borderWidth: 0.5,
-                        pointRadius: 0,
-                        backgroundColor: '#ffd60a',
-                        tension: 0.4
-                    },
+                    //OSCILLATORS PLOT ONLY
                     {
                         label: `${payload.select_oscillator.toUpperCase()}`,
                         data: data.oscillator,
@@ -107,7 +101,7 @@ document.getElementById('submit_oscillator').addEventListener('click', async (e)
                 scales: {
                     x: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1)' } },
                     y: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1)' } }
-
+                    
                 }
             }
         });
