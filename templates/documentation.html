@@ -9,22 +9,52 @@
     <!-- MathJax -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            background-color: rgb(228, 228, 228);
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            color: #333;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        ul li {
+            margin-bottom: 5px;
+        }
+
+        p.description {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-style: italic;
+            color: #555;
+        }
+    </style>
 </head>
-<style>
-    body{
-        background-color: rgb(228, 228, 228);
-    }
-</style>
 
 <body>
     <div id="main">
-
-        <h1>NSIDE FLUX — Custom Formula Guide</h1>
-
+        <h1>INSIDE FLUX — Custom Formula Guide</h1>
+        <h3>USED AI FOR THIS DOCUMENTATION</h3>
 
         <h2>1 · Custom Formula Overview</h2>
         <p>FLUX allows users to create up to <strong>two custom formulas</strong> (formula_1 and formula_2) for financial analysis.</p>
-        <p>Features:</p>
         <ul>
             <li>No coding knowledge required</li>
             <li>Safe evaluation — prevents unsafe operations</li>
@@ -73,65 +103,85 @@ formula_1 = 'rolling_mean(momentum(close, 5), 10)'</code></pre>
         <hr>
 
         <h1>2 · Moving averages</h1>
+
         <h3>Simple Moving Average — SMA</h3>
         <p>\[ SMA_t = \frac{1}{n} \sum_{i=0}^{n-1} P_{t-i} \]</p>
+        <p class="description">SMA calculates the average price over a period, smoothing short-term fluctuations. Useful for identifying overall trend direction.</p>
 
         <h3>Exponential Moving Average — EMA</h3>
         <p>\[ EMA_t = \alpha P_t + (1-\alpha) EMA_{t-1},\quad \alpha = \frac{2}{n+1} \]</p>
+        <p class="description">EMA assigns more weight to recent prices, making it responsive to recent price changes. Helps detect trend reversals faster than SMA.</p>
 
         <h3>Weighted Moving Average — WMA / LWMA</h3>
         <p>\[ WMA_t = \frac{\sum_{i=0}^{n-1} w_i P_{t-i}}{\sum_{i=0}^{n-1} w_i} \]</p>
+        <p class="description">WMA emphasizes recent prices more than older ones, which is useful for short-term trend detection and timing trades.</p>
 
         <h3>Cumulative Moving Average — CMA</h3>
         <p>\[ CMA_t = \frac{1}{t} \sum_{i=1}^{t} P_i \]</p>
+        <p class="description">CMA calculates the mean of all prices from the beginning. Good for long-term trend analysis and smoothing historical data.</p>
 
-        <h3>Smoothed Moving Average — SMMA (RMA)</h3>
+        <h3>Smoothed Moving Average — SMMA</h3>
         <p>\[ SMMA_t = \frac{SMMA_{t-1}\times(n-1) + P_t}{n} \]</p>
+        <p class="description">SMMA reduces noise more than SMA, producing a smoother trend line. Often combined with oscillators for signal confirmation.</p>
 
         <h3>Triangular Moving Average — TMA</h3>
         <p>\[ TMA_t = SMA(SMA(P,n),n) \]</p>
+        <p class="description">TMA applies SMA twice, further smoothing the data. Ideal for analyzing long-term trends with minimal short-term noise.</p>
 
         <h3>Hull Moving Average — HMA</h3>
         <p>\[ HMA = WMA\Big( 2 \cdot WMA(P, n/2) - WMA(P, n), \sqrt{n} \Big) \]</p>
+        <p class="description">HMA reduces lag while maintaining smoothness. Useful for spotting trend changes quickly and improving timing for trades.</p>
 
         <h3>Kaufman Adaptive Moving Average — KAMA</h3>
         <p>\[ ER = \frac{|P_t - P_{t-n}|}{\sum_{i=0}^{n-1} |P_{t-i} - P_{t-i-1}|}, \quad
         KAMA_t = KAMA_{t-1} + \alpha(ER)(P_t - KAMA_{t-1}) \]</p>
+        <p class="description">KAMA adapts to market noise. It moves slowly in sideways markets and responds quickly to trends, reducing false signals.</p>
 
         <h3>Arnaud Legoux MA — ALMA</h3>
         <p>\[ ALMA_t = \frac{\sum_{i=0}^{n-1} w_i P_{t-i}}{\sum_{i=0}^{n-1} w_i}, \quad w_i = e^{-\frac{(i-m)^2}{2\sigma^2}} \]</p>
+        <p class="description">ALMA applies Gaussian weights to reduce lag and noise, providing smooth trend lines useful for both short- and long-term analysis.</p>
 
         <h3>Fractal Adaptive MA — FRAMA</h3>
         <p>\[ FRAMA_t = FRAMA_{t-1} + \alpha (P_t - FRAMA_{t-1}), \quad \alpha = e^{-4.6(D-n)/n} \]</p>
+        <p class="description">FRAMA adjusts smoothing based on market volatility. Reacts faster in trending markets and slower in sideways markets, reducing false signals.</p>
 
         <h2>3 · Oscillators & momentum</h2>
 
         <h3>Relative Strength Index — RSI</h3>
         <p>\[ RSI = 100 - \frac{100}{1 + RS}, \quad RS = \frac{Average\ Gain}{Average\ Loss} \]</p>
+        <p class="description">RSI measures speed and change of price movements. Values above 70 suggest overbought, below 30 suggest oversold. Useful for spotting trend reversals.</p>
 
         <h3>MACD (Moving Average Convergence Divergence)</h3>
         <p>\[ MACD = EMA_{12} - EMA_{26}, \quad Signal = EMA(MACD, 9) \]</p>
+        <p class="description">MACD shows momentum by comparing EMAs. Signal line helps identify bullish/bearish momentum and trend reversals.</p>
 
         <h3>Stochastic Oscillator (%K / %D)</h3>
         <p>\[ \%K = \frac{C - L_n}{H_n - L_n}\times100, \quad \%D = SMA(\%K,3) \]</p>
+        <p class="description">Measures closing price relative to recent high-low range. Indicates overbought/oversold conditions and potential reversals.</p>
 
         <h3>Williams %R</h3>
         <p>\[ \%R = \frac{H_n - C_t}{H_n - L_n}\times -100 \]</p>
+        <p class="description">Shows overbought/oversold levels similar to stochastic oscillator, helpful in timing entries and exits.</p>
 
         <h3>Rate of Change — ROC & Momentum</h3>
         <p>\[ ROC = \frac{P_t - P_{t-n}}{P_{t-n}}\times 100, \quad Momentum = P_t - P_{t-n} \]</p>
+        <p class="description">ROC and Momentum indicate price velocity. Useful for spotting acceleration or deceleration in trends.</p>
 
         <h3>TRIX (Triple Exponential Oscillator)</h3>
         <p>\[ TRIX = \frac{EMA_{3x}(close) - EMA_{3x}(close)_{prev}}{EMA_{3x}(close)_{prev}}\times100 \]</p>
+        <p class="description">TRIX filters minor price movements and identifies trend direction. Reduces noise and false signals.</p>
 
         <h3>Commodity Channel Index — CCI</h3>
         <p>\[ CCI = \frac{TP - SMA(TP)}{0.015 \times MD}, \quad TP = \frac{H+L+C}{3} \]</p>
+        <p class="description">CCI measures deviation from the mean price. Helps detect overbought/oversold conditions and reversals.</p>
 
         <h3>Money Flow Index — MFI</h3>
         <p>\[ MFI = 100 - \frac{100}{1 + MR}, \quad MR = \frac{Positive\ Money\ Flow}{Negative\ Money\ Flow} \]</p>
+        <p class="description">MFI combines price and volume to identify overbought/oversold conditions, useful for spotting reversals.</p>
 
         <h3>True Strength Index — TSI</h3>
         <p>\[ TSI = 100 \times \frac{EMA(EMA(\Delta P, r), s)}{EMA(EMA(|\Delta P|, r), s)} \]</p>
+        <p class="description">TSI filters noise and indicates trend direction and momentum. Useful for confirming trends and potential reversals.</p>
 
         <h2>4 · Volume & weighted measures</h2>
 
@@ -142,47 +192,57 @@ formula_1 = 'rolling_mean(momentum(close, 5), 10)'</code></pre>
             -V_t & C_t < C_{t-1} \\ 
             0 & \text{else} 
         \end{cases} \]</p>
+        <p class="description">OBV tracks buying/selling pressure. Rising OBV suggests accumulation, falling OBV suggests distribution.</p>
 
         <h3>Volume Weighted Average Price — VWAP</h3>
         <p>\[ VWAP_t = \frac{\sum_{i=1}^{t} P_i V_i}{\sum_{i=1}^{t} V_i} \]</p>
+        <p class="description">VWAP provides average price weighted by volume. Traders use it to assess intraday price efficiency and guide entries/exits.</p>
 
         <h3>Chaikin Money Flow — CMF</h3>
         <p>\[ CMF = \frac{\sum_{i=1}^{n} (CLV_i \cdot V_i)}{\sum_{i=1}^{n} V_i}, \quad CLV = \frac{(C-L)-(H-C)}{H-L} \]</p>
+        <p class="description">CMF measures money flow over a period. Positive CMF indicates buying pressure; negative CMF indicates selling pressure.</p>
 
         <h3>Accumulation/Distribution Line — ADL</h3>
         <p>\[ ADL_t = ADL_{t-1} + \frac{(C_t - L_t) - (H_t - C_t)}{H_t - L_t} \times V_t \]</p>
+        <p class="description">ADL combines price and volume to measure cumulative buying/selling pressure. Useful for confirming trends.</p>
 
         <h2>5 · Volatility & risk</h2>
 
         <h3>Bollinger Bands</h3>
         <p>\[ Middle = SMA(n), \quad Upper = SMA(n)+k\sigma, \quad Lower = SMA(n)-k\sigma \]</p>
+        <p class="description">Bollinger Bands indicate price volatility and overbought/oversold levels. Wide bands = high volatility, narrow bands = low volatility.</p>
 
         <h3>Average True Range — ATR</h3>
         <p>\[ TR = \max(H-L, |H-C_{prev}|, |L-C_{prev}|), \quad ATR = EMA(TR, n) \]</p>
+        <p class="description">ATR measures market volatility. Useful for setting stop-loss levels and assessing risk.</p>
 
         <h3>Log Returns & Variance</h3>
         <p>\[ r_t = \ln \frac{P_t}{P_{t-1}}, \quad Var(r) = E[(r - \bar r)^2] \]</p>
+        <p class="description">Log returns measure continuous returns; variance quantifies risk. Useful for portfolio analysis and volatility assessment.</p>
 
         <h3>Sharpe Ratio</h3>
         <p>\[ Sharpe = \frac{R_p - R_f}{\sigma_p} \]</p>
+        <p class="description">Sharpe Ratio evaluates risk-adjusted returns. Higher values indicate better reward per unit of risk.</p>
 
         <h3>Sortino Ratio</h3>
         <p>\[ Sortino = \frac{R_p - R_f}{\sigma_{down}} \]</p>
+        <p class="description">Sortino Ratio is similar to Sharpe but focuses only on downside risk. Helps assess strategy safety when only losses matter.</p>
 
         <h3>Value at Risk — VaR (Parametric)</h3>
         <p>\[ VaR_{p, \alpha} = \mu_p + z_\alpha \sigma_p \]</p>
+        <p class="description">VaR estimates maximum expected loss over a time horizon with a given confidence level. Useful for risk management.</p>
 
         <h2>6 · Stochastic models & Monte Carlo</h2>
 
         <h3>Geometric Brownian Motion (GBM)</h3>
         <p>\[ dS_t = \mu S_t dt + \sigma S_t dW_t, \quad S_t = S_0 \exp \Big( (\mu - \frac{1}{2}\sigma^2) t + \sigma W_t \Big) \]</p>
+        <p class="description">GBM models continuous stock prices, accounting for drift and volatility. Useful for option pricing, Monte Carlo simulations, and forecasting.</p>
 
         <h3>Discrete-time Random Walk</h3>
         <p>\[ S_{t+1} = S_t + \mu \Delta t + \sigma \sqrt{\Delta t} \epsilon_t, \quad \epsilon_t \sim N(0,1) \]</p>
+        <p class="description">Random Walk simulates discrete stock price movements. Helps in understanding potential price paths and stochastic forecasting.</p>
 
         <button onclick="window.scrollTo({top:0, behavior:'smooth'});">Back to top ↑</button>
-
     </div>
 </body>
-
 </html>
