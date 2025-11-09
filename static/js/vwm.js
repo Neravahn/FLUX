@@ -108,7 +108,7 @@ document.getElementById('resetZoom').addEventListener("click", () => {
 });
 
 document.getElementById("toggleGrid").addEventListener("click", () => {
-  gridVisible = !gridVisible;
+  gridVisible_4 = !gridVisible_4;
   if (vwmChart) {
     vwmChart.options.scales.x.grid.color = gridVisible_4 ? "rgba(255,255,255,0.1)" : "transparent";
     vwmChart.options.scales.y.grid.color = gridVisible_4 ? "rgba(255,255,255,0.1)" : "transparent";
