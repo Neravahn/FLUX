@@ -14,6 +14,6 @@
 - **Responsive UI:** Works on desktop and mobile devices.
 
 ---
-
+- [DEMO VIDEO](https://drive.google.com/file/d/13sGTFccJ4WJHKLtMVElJ-NJfdf-DJWj5/view?usp=sharing)
 - CHECKOUT [FLUX DOCUMENTATION](https://web-production-df855.up.railway.app/documentation)
 - [WEB APP](https://web-production-df855.up.railway.app)
