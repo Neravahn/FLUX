@@ -41,9 +41,9 @@ document.getElementById('submit_vnr').addEventListener('click', async (e) => {
         if (maChart) maChart.destroy();
         if (alphabetaChart) alphabetaChart.destroy();
         if (oscillatorChart) oscillatorChart.destroy();
-        if (vwmChart) vwmChart.destroy();_5
+        if (vwmChart) vwmChart.destroy();
         if (vnrChart) vnrChart.destroy();
-        if (rwChart) rwChart.destroy();
+        
 
 
         //CREATING NEW CHART
@@ -127,7 +127,7 @@ document.getElementById('resetZoom').addEventListener("click", () => {
 });
 
 document.getElementById("toggleGrid").addEventListener("click", () => {
-    gridVisible = !gridVisible;
+    gridVisible_5 = !gridVisible_5;
     if (vnrChart) {
         vnrChart.options.scales.x.grid.color = gridVisible_5 ? "rgba(255,255,255,0.1)" : "transparent";
         vnrChart.options.scales.y.grid.color = gridVisible_5 ? "rgba(255,255,255,0.1)" : "transparent";

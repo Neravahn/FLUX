@@ -92,10 +92,41 @@
             transform: scale(1.06);
             cursor: pointer;
         }
-        footer{
-            position: absolute;
-            margin-top: 700px;
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: transparent;
+            text-align: center;
+            padding: 10px 0;
+            z-index: 2;
         }
+
+        .footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .footer a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .footer img {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            filter: brightness(0) invert(1);
+
+        }
+
+
 
 
         @media (max-width: 700px) {
@@ -167,5 +198,18 @@
             FORECAST
         </button>
     </div>
+
+    <footer>
+        <div class="footer">
+
+            <a href="https://github/Neravahn/FLUX" target="_blank">
+                <img src="{{ url_for('static', filename='images/icons8-github-50.png') }}">
+                <span>GITHUB</span>
+            </a>
+
+        </div>
+    </footer>
+
 </body>
+
 </html>

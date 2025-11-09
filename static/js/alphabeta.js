@@ -39,7 +39,7 @@ document.getElementById('submit_alphabeta').addEventListener('click', async (e) 
         if (oscillatorChart) oscillatorChart.destroy();
         if (vwmChart) vwmChart.destroy();
         if (vnrChart) vnrChart.destroy();
-        if (rwChart) rwChart.destroy();
+        
 
         const ctx = document.getElementById('engine-canvas').getContext('2d');
         alphabetaChart = new Chart(ctx, {
@@ -102,7 +102,7 @@ document.getElementById('resetZoom').addEventListener("click", () => {
 });
 
 document.getElementById("toggleGrid").addEventListener("click", () => {
-    gridVisible = !gridVisible;
+    gridVisible_2 = !gridVisible_2;
     if (alphabetaChart) {
         alphabetaChart.options.scales.x.grid.color = gridVisible_2 ? "rgba(255,255,255,0.1)" : "transparent";
         alphabetaChart.options.scales.y.grid.color = gridVisible_2 ? "rgba(255,255,255,0.1)" : "transparent";

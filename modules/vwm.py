@@ -68,13 +68,13 @@ def calculate_vwm(ticker, interval, vwm, period_ma):
             data['vwm'] = mf_volume.rolling(period_ma).sum() / (data['volume'].rolling(period_ma).sum() + epsilon)
             data['vwm_ma'] = np.nan
 
-        elif vwm == 'adl':
-            epsilon = 1e-9
-            mf_multiplier = ((data['close'] - data['low']) - (data['high'] - data['close'])) / ((data['high'] - data['low']) + epsilon)
-            mf_volume = mf_multiplier * data['volume']
-            data['vwm'] = mf_volume.cumsum()
-            data['vwm_ma'] = np.nan
-
+        # elif vwm == 'adl':
+        #     epsilon = 1e-9
+        #     mf_multiplier = ((data['close'] - data['low']) - (data['high'] - data['close'])) / ((data['high'] - data['low']) + epsilon)
+        #     mf_volume = mf_multiplier * data['volume']
+        #     data['vwm'] = mf_volume.cumsum()
+        #     data['vwm_ma'] = np.nan
+        #REMOVED ADL
 
 
         days = data.index.strftime("%Y-%m-%d %H:%M:%S").tolist()

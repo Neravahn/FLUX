@@ -37,7 +37,7 @@ document.getElementById('submit_vwm').addEventListener('click', async (e) => {
         if (oscillatorChart) oscillatorChart.destroy();
         if (vwmChart) vwmChart.destroy();
         if (vnrChart) vnrChart.destroy();
-        if (rwChart) rwChart.destroy();
+        
 
         const ctx = document.getElementById('engine-canvas').getContext('2d');
         vwmChart = new Chart(ctx, {

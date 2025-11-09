@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 
 def oscillator_calculate(ticker, interval, oscillator, period, fast, slow, signal):
+    if period:
+        period = int(period)
 
 
     # FETCHING DATA FOR OSCILLATORS 
@@ -40,12 +42,18 @@ def oscillator_calculate(ticker, interval, oscillator, period, fast, slow, signa
         elif oscillator == 'macd':
             if not fast:
                 fast = 12
+            else:
+                fast = int(fast)
 
             if not slow:
                 slow = 26
+            else:
+                slow = int(slow)
 
             if not signal:
                 signal = 9
+            else:
+                signal = int(signal)
 
             
             ema_fast = data['close'].ewm(span = fast, adjust=False).mean()

@@ -33,12 +33,12 @@ document.getElementById('submit_rw').addEventListener('click', async (e) => {
             errorDiv.textContent = ''
         }
 
-        if (maChart) maChart.destroy();
-        if (alphabetaChart) alphabetaChart.destroy();
-        if (oscillatorChart) oscillatorChart.destroy();
-        if (vwmChart) vwmChart.destroy();
-        if (vnrChart) vnrChart.destroy();
+    
+      
+       
+
         if (rwChart) rwChart.destroy();
+        if (gbmChart) gbmChart.destroy();
 
         const ctx = document.getElementById('forecast-canvas').getContext('2d');
 
@@ -110,7 +110,7 @@ document.getElementById('resetZoom').addEventListener("click", () => {
 });
 
 document.getElementById("toggleGrid").addEventListener("click", () => {
-  gridVisible = !gridVisible;
+  gridVisible_6 = !gridVisible_6;
   if (rwChart) {
     rwChart.options.scales.x.grid.color = gridVisible_6 ? "rgba(255,255,255,0.1)" : "transparent";
     rwChart.options.scales.y.grid.color = gridVisible_6 ? "rgba(255,255,255,0.1)" : "transparent";
