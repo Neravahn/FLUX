@@ -15,4 +15,5 @@
 
 ---
 
-https://web-production-df855.up.railway.app/
+CHECKOUT [FLUX DOCUMENTATION][https://web-production-df855.up.railway.app/documentation]
+[WEB APP][https://web-production-df855.up.railway.app]
