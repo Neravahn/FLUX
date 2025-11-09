@@ -4,6 +4,7 @@ import numpy as np
 
 def oscillator_calculate(ticker, interval, oscillator, period, fast, slow, signal):
 
+
     # FETCHING DATA FOR OSCILLATORS 
     if interval in ['1m', '2m', '5m', '15m', '30m']:
         period_df = '7d'

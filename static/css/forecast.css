@@ -138,7 +138,8 @@
  }
 
 
- #submit_gbm {
+ #submit_gbm,
+ #submit_rw {
    width: 100%;
    padding: 12px;
    background-color: transparent;
@@ -152,7 +153,8 @@
  }
 
 
- #submit_gbm:hover {
+ #submit_gbm:hover,
+ #submit_rw:hover {
    background-color: #f1f1f1;
    color: black;
  }

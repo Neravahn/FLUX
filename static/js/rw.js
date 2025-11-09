@@ -1,33 +1,35 @@
-const gbmForm = document.getElementById('gbm-panel');
-let gbmChart;
-let gridVisible_5 = true;
+const rwForm = document.getElementById('rw-panel');
+let rwChart;
+let gridVisible_6 = true;
 
-document.getElementById('submit_gbm').addEventListener('click', async (e) => {
+document.getElementById('submit_rw').addEventListener('click', async (e) => {
     e.preventDefault();
 
     const payload = {
-        ticker : gbmForm.ticker_gbm.value,
-        interval: gbmForm.interval_gbm.value,
-        th_gbm: gbmForm.th_gbm.value,
-        nos_gbm: gbmForm.nos_gbm.value,
-        drift_gbm: gbmForm.drift_gbm.value,
-        volatility_gbm: gbmForm.volatility_gbm.value
+        ticker: rwForm.ticker_rw.value,
+        interval: rwForm.interval_rw.value,
+        th_rw: rwForm.th_rw.value,
+        nos_rw: rwForm.nos_rw.value,
+        drift_rw: rwForm.drift_rw.value,
+        volatility_rw: rwForm.volatility_rw.value
     };
 
+
     try {
-        const response = await fetch('/gbm_engine', {
-            method : 'POST',
-            headers: { 'Content-Type': 'application/json'},
+        const response = await fetch('/rw_engine', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
         const data = await response.json();
-        const errorDiv = document.getElementById('forecast-error_gbm');
+        const errorDiv = document.getElementById('forecast-error_rw');
+
 
         if (data.error) {
             errorDiv.textContent = data.error;
             return;
-        } else { 
+        } else {
             errorDiv.textContent = ''
         }
 
@@ -44,25 +46,22 @@ document.getElementById('submit_gbm').addEventListener('click', async (e) => {
         const sims = data.simulations;
 
 
-        
-
         const datasets = sims.map((sim, i) => ({
-            label: `Sim ${i+1}`,
             data: sim,
-            borderColor: `hsl(${(i*40) % 360}, 70%, 60%)`,
-            borderWidth:1,
-            tension:0.,
+            borderColor: `hsl(${(i * 40) % 360}, 70%, 60%)`,
+            borderWidth: 1,
+            tension: 0,
             pointRadius: 0,
-            fill:false
+            fill: false
         }));
 
         //MEAN LINE
-        const meanPath = Array.from({length: labels.length}, (_, j) =>
-        sims.reduce((sum, sim) => sum+sim[j], 0)/sims.length
-    );
+        const meanPath = Array.from({ length: labels.length }, (_, j) =>
+            sims.reduce((sum, sim) => sum + sim[j], 0) / sims.length
+        );
 
-        datasets.push ({
-            label:'Average Path',
+        datasets.push({
+            label: 'Average Path',
             data: meanPath,
             borderColor: 'white',
             borderWidth: 2,
@@ -70,56 +69,52 @@ document.getElementById('submit_gbm').addEventListener('click', async (e) => {
             pointRadius: 0
         });
 
-        gbmChart = new Chart(ctx, {
+        rwChart = new Chart(ctx, {
             type: 'line',
-            data: {labels,datasets},
+            data: { labels, datasets },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display:false},
+                    legend: { display: false },
                     tooltip: {
                         backgroundColor: '#0f0f0f',
-                        titleColot: '#fff',
-                        bodyColor: '#ddd'
+                        titleColor: '#fff'
                     },
 
                     zoom: {
-                        pan: { enabled: true, mode:'xy'},
+                        pan: { enabled: true, mode: 'xy' },
                         zoom: {
-                            wheel: {enabled:true},
-                            pinch: {enabled:true},
-                            drag: {enabled:true},
-                            mode:'xy'
+                            wheel: { enabled: true },
+                            pinch: { enabled: true },
+                            drag: { enabled: true },
+                            mode: 'xy'
                         }
                     }
                 },
-
                 scales: {
-                    x: { ticks: { color: '#bbb'},grid: { color: 'rgba(255,255,255,0.1)'}},
+                    x: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1)' } },
                     y: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1)' } }
                 }
             }
         });
-
-
-    }catch (err) {
-        document.getElementById('forecast-error_gbm').textContent = 'Something went wrong.';
+    } catch (err) {
+        document.getElementById('forecast-error_rw').textContent = 'Something went wrong,';
         console.error(err);
     }
 });
 
-//WILL ADD BUTTON ACTIONS HERE
+//WILL ADD BUTTONS HERE
 document.getElementById('resetZoom').addEventListener("click", () => {
-  if (gbmChart) gbmChart.resetZoom();
+  if (rwChart) rwChart.resetZoom();
 });
 
 document.getElementById("toggleGrid").addEventListener("click", () => {
   gridVisible = !gridVisible;
-  if (gbmChart) {
-    gbmChart.options.scales.x.grid.color = gridVisible_5 ? "rgba(255,255,255,0.1)" : "transparent";
-    gbmChart.options.scales.y.grid.color = gridVisible_5 ? "rgba(255,255,255,0.1)" : "transparent";
-    gbmChart.update();
+  if (rwChart) {
+    rwChart.options.scales.x.grid.color = gridVisible_6 ? "rgba(255,255,255,0.1)" : "transparent";
+    rwChart.options.scales.y.grid.color = gridVisible_6 ? "rgba(255,255,255,0.1)" : "transparent";
+    rwChart.update();
   }
 });
 

@@ -273,71 +273,8 @@ def run_formula(ticker, interval, formula_1, formula_2, moving_average, window):
         data['ma'] = alma
     
 
-
-
-    elif moving_average == 'frama':
-        close = data['close']
-        n = window
-        frama = pd.Series(index = close.index, dtype=float)
-        frama.iloc[n-1] = close.iloc[:n].mean()
-
-        # for i in range(n, len(close)):
-        #     segment = close.iloc[i - n:i]
-        #     half = n //2
-
-        #     n1 = segment.iloc[:half].max() - segment.iloc[:half].min()
-        #     n2 = segment.iloc[half:].max() - segment.iloc[half:].min()
-        #     n3 = segment.max() - segment.min()
-
-        #     if n1 <= 0 or n2 <=0 or n3 <=0:
-        #         d = 1
-        #     else:
-        #         d = (np.log(n1+n2) - np.log(n3)) / np.log(2)
-
-        #         # ADDING ADAPTIVE SMOOTHNING FACTOR
-
-        #         alpha = np.exp(-4.6 * (d-1))
-        #         alpha = max(min(alpha, 1), 0.01)
-
-
-        #         # ADDING RECURSIVE SMOOTHING
-        #         prev = frama.iloc[i - 1]
-        #         frama.iloc[i] = prev + alpha * (close.iloc[i] -prev)
-    
-        # data['ma'] = frama
-
-
-    # THIS ONE WAS TRACING THE EXACT PATH OF CLOSE LETS TRY OTHER USING FC AND SC
-
-        fc, sc = 1, 198
-
-        for i in range(n, len(close)):
-            segment = close.iloc[i - n:i]
-            half = n//2
-
-            n1 = segment.iloc[:half].max() - segment.iloc[:half].min()
-            n2 = segment.iloc[half:].max() - segment.iloc[half:].min()
-            n3 = segment.max90 - segment.min()
-
-            if n1 <= 0 or n2<= 0 or n3<= 0:
-                d =  1.5
-
-            else:
-                d = (np.log(n1 + n2) - np.log(n3)) / np.log(2)
-                d = np.clip(d, 1, 2)
-
-            alpha = np.exp( - 4.6 * (d -1))
-            alpha = (alpha - np.exp(-4.6)) / (1- np.exp(-4.6))
-            alpha = alpha * (2/ (fc +1) - 2 / (sc +1)) +2 / (sc +1)
-            alpha  = np.clip(alpha, 0.01, 1)
-
-            prev = frama.iloc[i - 1]
-            frama.iloc[i] = prev + alpha * (close.iloc[i] - prev)
-
-        data['ma'] = frama
-
     else:
-        data['ma'] = None
+        data['ma'] = pd.Series(np.nan, index=data.index)
 
 
 

@@ -5,6 +5,7 @@ from modules.oscillators import oscillator_calculate
 from modules.vwm import calculate_vwm
 from modules.vnr import calculate_vnr
 from modules.gbm import calculate_gbm
+from modules.rw import calculate_rw
 
 
 app = Flask(__name__)
@@ -78,7 +79,7 @@ def oscillator_engine():
 
 
 @app.route('/vwm_engine', methods = ['POST'])
-def wm_engine():
+def vwm_engine():
     data = request.get_json()
 
     try:
@@ -116,6 +117,15 @@ def vnr_engine():
     
 
 
+#============================================
+#              PREDICTION MODELS
+#============================================
+
+@app.route('/predictionmodels')
+def predictionmodels():
+    return render_template('predictionmodels.html')
+
+
 @app.route('/gbm_engine', methods = ['POST'])
 def gbm_engine():
     data= request.get_json()
@@ -125,27 +135,34 @@ def gbm_engine():
         interval = data['interval']
         nos_gbm = data['nos_gbm']
         th_gbm = data['th_gbm']
+        drift_gbm = data['drift_gbm']
+        volatility_gbm = data['volatility_gbm']
         
-        result = calculate_gbm(ticker, interval, th_gbm, nos_gbm)
+        result = calculate_gbm(ticker, interval, th_gbm, nos_gbm, drift_gbm, volatility_gbm)
 
         return jsonify(result)
     
     except Exception as e:
         return jsonify({'error': str(e)})
+    
 
+@app.route('/rw_engine', methods= ['POST'])
+def rw_engine():
+    data = request.get_json()
+    try:
+        ticker = data['ticker']
+        interval = data['interval']
+        th_rw = data['th_rw']
+        nos_rw = data['nos_rw']
+        drift_rw = data['drift_rw']
+        volatility_rw = data['volatility_rw']
 
+        result = calculate_rw(ticker, interval, th_rw, nos_rw, drift_rw, volatility_rw)
 
-
-
-
-
-#============================================
-#              PREDICTION MODELS
-#============================================
-
-@app.route('/predictionmodels')
-def predictionmodels():
-    return render_template('predictionmodels.html')
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 @app.route('/documentation')
 def documentation():

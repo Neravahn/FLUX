@@ -36,7 +36,8 @@ document.getElementById('submit_formula').addEventListener('click', async (e) =>
     if (alphabetaChart) alphabetaChart.destroy();
     if (oscillatorChart) oscillatorChart.destroy();
     if (vwmChart) vwmChart.destroy();
-    if (vnrChart) vnrChart.destory();
+    if (vnrChart) vnrChart.destroy();
+    if (rwChart) rwChart.destroy();
 
     const ctx = document.getElementById('engine-canvas').getContext('2d');
     maChart = new Chart(ctx, {
@@ -75,23 +76,23 @@ document.getElementById('submit_formula').addEventListener('click', async (e) =>
             borderWidth: 0.5
           },
 
-          
+
           //BOLLINGER BAND PLOT
           {
-          label: 'MIDDLE BAND',
-          data:data.marw,
-          pointRadius: 0,
-          tension: 0.4,
-          borderWidth:0.5,
-          borderColor: '#B0B0B0',
-          backgroundColor: '#B0B0B0'
+            label: 'MIDDLE BAND',
+            data: data.marw,
+            pointRadius: 0,
+            tension: 0.4,
+            borderWidth: 0.5,
+            borderColor: '#B0B0B0',
+            backgroundColor: '#B0B0B0'
           },
           {
-            label:'UPPER BAND',
+            label: 'UPPER BAND',
             data: data.bb_upper,
-            pointRadius:0,
-            tension:0.4,
-            borderWidth:0.5,
+            pointRadius: 0,
+            tension: 0.4,
+            borderWidth: 0.5,
             borderColor: '#9B5DE5',
             backgroundColor: '#9B5DE5'
           },
@@ -105,7 +106,7 @@ document.getElementById('submit_formula').addEventListener('click', async (e) =>
             backgroundColor: '#00BBF9'
           },
 
-          
+
 
           // PRICE PLOT===
           {

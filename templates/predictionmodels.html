@@ -68,10 +68,75 @@
                     <input type="number" id="nos_gbm" name="nos_gbm" placeholder="Default">
                 </div>
 
+                <div class="form-group">
+                    <label for="drift_gbm">Enter Drift (&mu;)</label>
+                    <input type="number" id="drift_gbm" name="drift_gbm" placeholder="Default">
+                </div>
+                <div class="form-group">
+                    <label for="volatility_gbm">Enter Volatility (&sigma;)</label>
+                    <input type="number" id="volatility_gbm" name="volatility_gbm" placeholder="Default">
+                </div>
+
+
 
                 <button type="submit" id="submit_gbm">ANALYZE</button>
                 <div id="forecast-error_gbm"></div>
 
+            </form>
+
+            <!---=======RANDOM WALK MODEL==========-->
+            <form id="rw-panel">
+                <h2>DESCRETE - TIME RANDOM WALK</h2>
+                <div class="form-group">
+                    <label for="ticker_rw">Select Stock</label>
+                    <select id="ticker_rw" name="ticker_rw" required>
+                        <option value="">Select a stock...</option>
+                        <option value="AAPL">Apple (AAPL)</option>
+                        <option value="GOOGL">Alphabet (GOOGL)</option>
+                        <option value="MSFT">Microsoft (MSFT)</option>
+                        <option value="TSLA">Tesla (TSLA)</option>
+                        <option value="AMZN">Amazon (AMZN)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="interval_rw">Select Interval</label>
+                    <select id="interval_rw" name="interval_rw" required>
+                        <option value="">Select interval</option>
+                        <option value="1d">1 day </option>
+                        <option value="1h">1 hour</option>
+                        <option value="15m">15 minutes</option>
+                        <option value="5m">5 minutes</option>
+                        <option value="2m">2 minutes</option>
+                        <option value="1m">1 minute</option>
+                        <option value="1wk">1 week</option>
+                        <option value="1mo">1 month</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="th_rw">Enter Time Horizon ( Days )</label>
+                    <input type="number" id="th_rw" name="th_rw" placeholder="Default">
+                </div>
+
+                <div class="form-group">
+                    <label for="nos_rw">Enter Number of Stimulations</label>
+                    <input type="number" id="nos_rw" name="nos_rw" placeholder="Default">
+                </div>
+
+                <div class="form-group">
+                    <label for="drift_rw">Enter Drift (&mu;)</label>
+                    <input type="number" id="drift_rw" name="drift_rw" placeholder="Default">
+                </div>
+                <div class="form-group">
+                    <label for="volatility_rw">Enter Volatility (&sigma;)</label>
+                    <input type="number" id="volatility_rw" name="volatility_rw" placeholder="Default">
+                </div>
+
+
+
+                <button type="submit" id="submit_rw">ANALYZE</button>
+                <div id="forecast-error_rw"></div>
             </form>
 
         </div>
@@ -79,6 +144,7 @@
 
 <!--=======EXTERNAL JS-===============-->
 <script src="{{ url_for('static', filename='js/gbm.js')}}"></script>
+<script src="{{ url_for('static', filename='js/rw.js')}}"></script>
 </body>
 
 </html>

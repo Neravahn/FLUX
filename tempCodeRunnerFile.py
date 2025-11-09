@@ -1,0 +1,1 @@
+calculate_gbm(ticker, interval, th_gbm, nos_gbm, drift_gbm, volatility_gbm)

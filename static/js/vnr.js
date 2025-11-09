@@ -22,7 +22,7 @@ document.getElementById('submit_vnr').addEventListener('click', async (e) => {
     try {
         const response = await fetch('/vnr_engine', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
@@ -34,16 +34,16 @@ document.getElementById('submit_vnr').addEventListener('click', async (e) => {
             errorDiv.textContent = data.error;
             return;
         } else {
-            errorDiv.textContent =''
+            errorDiv.textContent = ''
         }
 
         //DESTROY PREVIOUS CAHRT BEFORE DEPLOYING NEW ONE
-
-        if (oscillatorChart) oscillatorChart.destroy();
         if (maChart) maChart.destroy();
         if (alphabetaChart) alphabetaChart.destroy();
+        if (oscillatorChart) oscillatorChart.destroy();
+        if (vwmChart) vwmChart.destroy();_5
         if (vnrChart) vnrChart.destroy();
-        if (vwmChart) vwmChart.destroy();
+        if (rwChart) rwChart.destroy();
 
 
         //CREATING NEW CHART
@@ -61,17 +61,17 @@ document.getElementById('submit_vnr').addEventListener('click', async (e) => {
                         backgroundColor: 'red',
                         borderColor: 'red',
                         tension: 0.4
-                        
+
                     },
                     {
-                        label : 'UPPER BAND',
+                        label: 'UPPER BAND',
                         data: data.upper,
-                        pointRadius:0,
+                        pointRadius: 0,
                         borderColor: '#9b5de5',
                         backgroundColor: '#9b5de5',
                         tension: 0.4,
                         borderWidth: 0.5
-                        
+
                     },
                     {
                         label: 'LOWER BAND',
@@ -81,7 +81,7 @@ document.getElementById('submit_vnr').addEventListener('click', async (e) => {
                         tension: 0.4,
                         borderWidth: 0.5,
                         backgroundColor: '#00bbf9'
-                        
+
                     }
                 ]
             },
@@ -90,35 +90,55 @@ document.getElementById('submit_vnr').addEventListener('click', async (e) => {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {display: true},
+                    legend: { display: true },
                     tooltip: {
                         backgroundColor: '#0f0f0f',
                         titleColor: '#fff',
                         bodyColor: '#ddd'
                     },
                     zoom: {
-                        pan: { enabled: true, mode: 'xy'},
-                        zoom: { 
-                            wheel: {enabled: true},
-                            pinch: {enabled: true},
-                            drag: {enabled: true},
+                        pan: { enabled: true, mode: 'xy' },
+                        zoom: {
+                            wheel: { enabled: true },
+                            pinch: { enabled: true },
+                            drag: { enabled: true },
                             mode: 'xy'
                         }
                     }
                 },
 
                 scales: {
-                    x: {ticks: {color: '#bbb'}, grid: {color: 'rgba(255,255,255,0.1'}},
-                    y: {ticks: {color: '#bbb'}, grid: {color: 'rgba(255,255,255,0.1'} }
+                    x: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1' } },
+                    y: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1' } }
                 }
             }
 
         });
 
-    }catch (err) {
+    } catch (err) {
         document.getElementById('engine-error_vnr').textContent = 'Something went wrong,';
         console.error(err);
     }
 });
 
 //=====BUTTON ACTIONS=======
+document.getElementById('resetZoom').addEventListener("click", () => {
+    if (vnrChart) vnrChart.resetZoom();
+});
+
+document.getElementById("toggleGrid").addEventListener("click", () => {
+    gridVisible = !gridVisible;
+    if (vnrChart) {
+        vnrChart.options.scales.x.grid.color = gridVisible_5 ? "rgba(255,255,255,0.1)" : "transparent";
+        vnrChart.options.scales.y.grid.color = gridVisible_5 ? "rgba(255,255,255,0.1)" : "transparent";
+        vnrChart.update();
+    }
+});
+
+document.getElementById("downloadChart").addEventListener("click", () => {
+    const canvas = document.getElementById("engine-canvas");
+    const link = document.createElement("a");
+    link.download = "main_chart.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+});

@@ -37,6 +37,7 @@ document.getElementById('submit_vwm').addEventListener('click', async (e) => {
         if (oscillatorChart) oscillatorChart.destroy();
         if (vwmChart) vwmChart.destroy();
         if (vnrChart) vnrChart.destroy();
+        if (rwChart) rwChart.destroy();
 
         const ctx = document.getElementById('engine-canvas').getContext('2d');
         vwmChart = new Chart(ctx, {
@@ -58,7 +59,7 @@ document.getElementById('submit_vwm').addEventListener('click', async (e) => {
                         data: data.vwm_ma,
                         borderColor: '#34c759',
                         borderWidth: '0.5',
-                        baclgroundColor: '#34c759',
+                        back_4groundColor: '#34c759',
                         tension: 0.5,
                         pointRadius: 0
                     }
@@ -88,8 +89,8 @@ document.getElementById('submit_vwm').addEventListener('click', async (e) => {
                 },
 
                 scales : {
-                    x: { ticks : {color: '#bbb'}, grid: {color: 'rgba(255, 255, 255, 0.1'}},
-                    y: { ticks : {color: '#bbb'}, grid: {color: 'rgba(255, 255, 255, 0.1'}}
+                    x: { ticks : {color: '#bbb'}, grid: {color: 'rgba(255, 255, 255, 0.1)'}},
+                    y: { ticks : {color: '#bbb'}, grid: {color: 'rgba(255, 255, 255, 0.1)'}}
                 }
             }
         });
@@ -102,15 +103,23 @@ document.getElementById('submit_vwm').addEventListener('click', async (e) => {
 });
 
 //DDING BUTTON ACTIONS
-
-document.getElementById('resetZoom').addEventListener('click', () => {
-    if (vwmChart) vwmChart.resetZoom();
+document.getElementById('resetZoom').addEventListener("click", () => {
+  if (vwmChart) vwmChart.resetZoom();
 });
 
-document.getElementById('downloadChart').addEventListener('click', () => {
-    const canvas = document.getElementById('engine-canvas');
-    const link = document.createElement('a');
-    link.download = 'vwm.png';
-    link.href = canvas.toDataUrl('image.png');
-    link.click();
+document.getElementById("toggleGrid").addEventListener("click", () => {
+  gridVisible = !gridVisible;
+  if (vwmChart) {
+    vwmChart.options.scales.x.grid.color = gridVisible_4 ? "rgba(255,255,255,0.1)" : "transparent";
+    vwmChart.options.scales.y.grid.color = gridVisible_4 ? "rgba(255,255,255,0.1)" : "transparent";
+    vwmChart.update();
+  }
+});
+
+document.getElementById("downloadChart").addEventListener("click", () => {
+  const canvas = document.getElementById("engine-canvas");
+  const link = document.createElement("a");
+  link.download = "main_chart.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
 });

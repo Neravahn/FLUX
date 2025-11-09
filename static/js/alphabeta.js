@@ -34,11 +34,12 @@ document.getElementById('submit_alphabeta').addEventListener('click', async (e) 
 
 
         // DESTROY PREVIOUS CHART BEFORE DEPLOYING NEW ONE
-        if (alphabetaChart) alphabetaChart.destroy();
         if (maChart) maChart.destroy();
+        if (alphabetaChart) alphabetaChart.destroy();
         if (oscillatorChart) oscillatorChart.destroy();
-        if (vnrChart) vnrChart.destory();
-        if (vwmChart) vwmChart.destory();
+        if (vwmChart) vwmChart.destroy();
+        if (vnrChart) vnrChart.destroy();
+        if (rwChart) rwChart.destroy();
 
         const ctx = document.getElementById('engine-canvas').getContext('2d');
         alphabetaChart = new Chart(ctx, {
@@ -84,8 +85,8 @@ document.getElementById('submit_alphabeta').addEventListener('click', async (e) 
                     }
                 },
                 scales: {
-                    x: { title: { display: true, text: 'Benchmark' } , grid: {color : 'rgba(255,255,255,0.1)'}},
-                    y: { title: { display: true, text: 'Stock Returns' }, grid: {color: 'rgba(255,255,255,0.1)'} }
+                    x: { title: { display: true, text: 'Benchmark' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    y: { title: { display: true, text: 'Stock Returns' }, grid: { color: 'rgba(255,255,255,0.1)' } }
                 }
             }
         });
@@ -96,21 +97,23 @@ document.getElementById('submit_alphabeta').addEventListener('click', async (e) 
 });
 
 // BUTTON ACTIONS HAHAHAH
-document.getElementById('resetZoom').addEventListener('click', () => {
+document.getElementById('resetZoom').addEventListener("click", () => {
     if (alphabetaChart) alphabetaChart.resetZoom();
 });
 
-document.getElementById('toggleGrid').addEventListener('click', () => {
-    gridVisible_2 = !gridVisible_2;
+document.getElementById("toggleGrid").addEventListener("click", () => {
+    gridVisible = !gridVisible;
     if (alphabetaChart) {
-        alphabetaChart.options.scales.x.grid.color = gridVisible_2 ? 'rgba(255,255,255,0.1)' : 'transparent';
-        alphabetaChart.options.scales.y.grid.color = gridVisible_2 ? 'rgba(255,255,255,0.1)' : 'transparent';
-        alphabetaChart.update()
+        alphabetaChart.options.scales.x.grid.color = gridVisible_2 ? "rgba(255,255,255,0.1)" : "transparent";
+        alphabetaChart.options.scales.y.grid.color = gridVisible_2 ? "rgba(255,255,255,0.1)" : "transparent";
+        alphabetaChart.update();
     }
 });
-document.getElementById('downloadChart').addEventListener('click', () => {
-    const canvas_ab = document.getElementById('engine-canvas');
-    const link_os = document.createElement('a');
-    link_os.download = 'alphabeta_chart.png';
-    link_os.click();
+
+document.getElementById("downloadChart").addEventListener("click", () => {
+    const canvas = document.getElementById("engine-canvas");
+    const link = document.createElement("a");
+    link.download = "main_chart.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
 });

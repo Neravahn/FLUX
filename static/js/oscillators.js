@@ -39,18 +39,19 @@ document.getElementById('submit_oscillator').addEventListener('click', async (e)
 
 
         // DESTROY PREVIOUS CAHRT BEFOR DEPLOYING NEW ONE
-        if (oscillatorChart) oscillatorChart.destroy();
         if (maChart) maChart.destroy();
         if (alphabetaChart) alphabetaChart.destroy();
-        if (vnrChart) vnrChart.destroy();
+        if (oscillatorChart) oscillatorChart.destroy();
         if (vwmChart) vwmChart.destroy();
+        if (vnrChart) vnrChart.destroy();
+        if (rwChart) rwChart.destroy();
 
         const ctx = document.getElementById('engine-canvas').getContext('2d');
         oscillatorChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: data.labels,
-                
+
                 datasets: [
 
                     //OSCILLATORS PLOT ONLY
@@ -68,7 +69,7 @@ document.getElementById('submit_oscillator').addEventListener('click', async (e)
                         label: 'Signal',
                         data: data.oscillator_signal,
                         borderColor: 'green',
-                        backgroundColor:'green',
+                        backgroundColor: 'green',
                         pointRadius: 0,
                         tension: 0.4,
                         borderWidth: 0.5
@@ -101,7 +102,7 @@ document.getElementById('submit_oscillator').addEventListener('click', async (e)
                 scales: {
                     x: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1)' } },
                     y: { ticks: { color: '#bbb' }, grid: { color: 'rgba(255,255,255,0.1)' } }
-                    
+
                 }
             }
         });
@@ -114,21 +115,23 @@ document.getElementById('submit_oscillator').addEventListener('click', async (e)
 });
 
 // BUTTON ACTIONS
-document.getElementById('resetZoom').addEventListener('click', () => {
+document.getElementById('resetZoom').addEventListener("click", () => {
     if (oscillatorChart) oscillatorChart.resetZoom();
 });
 
-document.getElementById('toggleGrid').addEventListener('click', () => {
-    gridVisible_3 = !gridVisible_3
-    oscillatorChart.options.scales.x.grid.color = gridVisible_3 ? 'rgba(255,255,255,1)': 'transparent';
-    oscillatorChart.options.scales.y.grid.color = gridVisible_3 ? 'rgba(255,255,255,1)': 'transparent';
-    oscillatorChart.update()
-
+document.getElementById("toggleGrid").addEventListener("click", () => {
+    gridVisible = !gridVisible;
+    if (oscillatorChart) {
+        oscillatorChart.options.scales.x.grid.color = gridVisible_3 ? "rgba(255,255,255,0.1)" : "transparent";
+        oscillatorChart.options.scales.y.grid.color = gridVisibl_3 ? "rgba(255,255,255,0.1)" : "transparent";
+        oscillatorChart.update();
+    }
 });
 
-document.getElementById('downloadChart').addEventListener('click', () => {
-    const canva_os = document.getElementById('engine-canvas');
-    const link_os = document.createElement('a');
-    link_os.download = 'oscillator_chart.png';
-    link_os.click();
+document.getElementById("downloadChart").addEventListener("click", () => {
+    const canvas = document.getElementById("engine-canvas");
+    const link = document.createElement("a");
+    link.download = "main_chart.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
 });
