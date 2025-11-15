@@ -12,10 +12,12 @@ It provides clean dashboards, charts, screening tools, and insights through an e
 - Historical candlesticks
 - Volume & momentum indicators
 - Interactive chart controls (zoom, pan, range)
+
 ⚡ Fast API Backend
 - Python + Flask backend
 - Clean REST endpoints
 - Uses Financial Modeling Prep / Yahoo Finance API
+
 🎨 Modern UI
 - Responsive design
 - Smooth animations
